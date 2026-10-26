@@ -115,7 +115,34 @@ fn start_preview_blocking(app: AppHandle, root: PathBuf) -> Result<PreviewInfo, 
         *guard = Some(child);
     }
 
+    // 必须把接收端留在后台持续读走输出：接收端被丢弃后读线程会退出，
+    // 管道关闭后 hugo 下一次写日志（例如保存触发的重建）就会收到 EPIPE 而退出。
+    std::thread::spawn(move || while receiver.recv().is_ok() {});
+
     Ok(PreviewInfo { url, port })
+}
+
+/// 预览进程是否还活着；已退出时顺手回收子进程，避免留下僵尸。
+#[tauri::command]
+pub fn preview_alive(app: AppHandle) -> bool {
+    let Some(state) = app.try_state::<PreviewState>() else {
+        return false;
+    };
+    let Ok(mut guard) = state.child.lock() else {
+        return false;
+    };
+    let Some(child) = guard.as_mut() else {
+        return false;
+    };
+
+    match child.try_wait() {
+        Ok(Some(_status)) => {
+            *guard = None;
+            false
+        }
+        Ok(None) => true,
+        Err(_) => false,
+    }
 }
 
 #[tauri::command]

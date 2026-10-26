@@ -1,5 +1,5 @@
 import { createPinia, setActivePinia } from "pinia";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 vi.mock("@tauri-apps/plugin-opener", () => ({ openUrl: vi.fn() }));
@@ -16,6 +16,11 @@ describe("preview store", () => {
     setActivePinia(createPinia());
     mockedInvoke.mockReset();
     mockedOpenUrl.mockReset();
+  });
+
+  afterEach(() => {
+    usePreviewStore().reset();
+    vi.useRealTimers();
   });
 
   it("启动成功后记录 URL 与端口", async () => {
@@ -70,6 +75,26 @@ describe("preview store", () => {
     expect(preview.device).toBe("desktop");
     preview.toggleDevice();
     expect(preview.device).toBe("mobile");
+  });
+
+  it("进程退出后轮询把状态切成错误", async () => {
+    vi.useFakeTimers();
+    mockedInvoke.mockImplementation(async (command: string) => {
+      if (command === "start_preview") {
+        return { url: "http://127.0.0.1:1313", port: 1313 };
+      }
+      if (command === "preview_alive") {
+        return false;
+      }
+      return undefined;
+    });
+    const preview = usePreviewStore();
+    await preview.start();
+
+    await vi.advanceTimersByTimeAsync(2000);
+
+    expect(preview.status).toBe("error");
+    expect(preview.error).toContain("退出");
   });
 
   it("用系统浏览器打开预览地址", async () => {

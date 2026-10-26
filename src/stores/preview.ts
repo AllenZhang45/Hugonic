@@ -21,6 +21,41 @@ export const usePreviewStore = defineStore("preview", () => {
 
   const running = computed(() => status.value === "running");
 
+  let healthTimer: ReturnType<typeof setInterval> | null = null;
+
+  function stopHealthCheck() {
+    if (healthTimer !== null) {
+      clearInterval(healthTimer);
+      healthTimer = null;
+    }
+  }
+
+  function startHealthCheck() {
+    stopHealthCheck();
+    healthTimer = setInterval(() => {
+      void checkAlive();
+    }, 2000);
+  }
+
+  /** 探测 hugo 进程是否还活着；已退出时把状态切到错误，避免 UI 一直显示绿色。 */
+  async function checkAlive(): Promise<boolean> {
+    if (status.value !== "running") {
+      return false;
+    }
+
+    try {
+      const alive = await invoke<boolean>("preview_alive");
+      if (!alive) {
+        status.value = "error";
+        error.value = "hugo server 已退出，预览不可用";
+        stopHealthCheck();
+      }
+      return alive;
+    } catch {
+      return false;
+    }
+  }
+
   async function start() {
     if (status.value === "starting" || status.value === "running") {
       return;
@@ -35,6 +70,7 @@ export const usePreviewStore = defineStore("preview", () => {
       port.value = info.port;
       status.value = "running";
       reloadToken.value += 1;
+      startHealthCheck();
     } catch (cause) {
       status.value = "error";
       url.value = null;
@@ -53,6 +89,7 @@ export const usePreviewStore = defineStore("preview", () => {
   }
 
   function reset() {
+    stopHealthCheck();
     status.value = "idle";
     url.value = null;
     port.value = null;
@@ -68,9 +105,13 @@ export const usePreviewStore = defineStore("preview", () => {
   }
 
   async function openExternal() {
-    if (url.value) {
-      await openUrl(url.value);
+    if (!url.value) {
+      return;
     }
+    if (!(await checkAlive())) {
+      return;
+    }
+    await openUrl(url.value);
   }
 
   return {

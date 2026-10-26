@@ -19,6 +19,7 @@ pub fn run() {
             commands::files::file_meta,
             commands::preview::start_preview,
             commands::preview::stop_preview,
+            commands::preview::preview_alive,
         ])
         .build(tauri::generate_context!())
         .expect("error while building tauri application");
