@@ -23,6 +23,7 @@ Hugo 静态站点的桌面管理器：左侧资源管理器 + Monaco 编辑器 +
 | [架构设计](docs/architecture.md) | 进程模型、预览链路、构建流水线、sidecar 打包、安全 |
 | [UI 设计](docs/ui-design.md) | 布局、组件拆分、交互规则、设计 token |
 | [开发指南](docs/development.md) | 环境准备、常用命令、测试策略、提交规范 |
+| [开发计划](docs/roadmap.md) | M0–M6 阶段拆解、验收标准、风险与待决事项 |
 | [UI 原型](docs/prototype/prototype-hugo-desktop-v1.html) | 单文件 HTML 原型，浏览器直接打开 |
 
 ## 技术栈
@@ -48,17 +49,10 @@ Hugo 静态站点的桌面管理器：左侧资源管理器 + Monaco 编辑器 +
 - 部署到 Vercel / Netlify / GitHub Pages / Cloudflare Pages，或导出静态文件到本地
 - 自动更新
 
-## 里程碑
+## 开发计划
 
-| 阶段 | 内容 | 完成标准 |
-|---|---|---|
-| M0 | 脚手架 | `pnpm tauri dev` 能启动窗口，前端 HMR 正常 |
-| M1 | 打开项目 + 文件树 | 选择目录后正确渲染目录树，忽略 `.git` / `public` |
-| M2 | 编辑器 + 保存 | 打开、编辑、保存文件，标签与脏标记正确 |
-| M3 | 实时预览 | 保存后预览内容更新，端口冲突可自愈 |
-| M4 | 构建 | 弹窗展示真实日志与耗时，可取消 |
-| M5 | 部署 | 至少一个平台可用（GitHub Pages 或 Netlify） |
-| M6 | 打包发布 | 三平台安装包 + 签名的自动更新 |
+按 M0–M6 推进：脚手架 → 打开项目与文件树 → 编辑器与保存 → 实时预览 → 构建 → 部署 → 打包发布。
+每阶段的交付物、验收标准、依赖与风险见 [开发计划](docs/roadmap.md)。
 
 ## 协作约定
 
