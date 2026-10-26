@@ -14,7 +14,7 @@
 | 文件树 | 自研组件 | 约 200 行 | 第三方文件树库都比手写复杂 |
 | 预览 | iframe + `hugo server` | Hugo 0.139 | 热重建与刷新由 Hugo 自己完成 |
 | 样式 | UnoCSS | 最新稳定版 | Tailwind 语法的按需版本 |
-| 构建分发 | Tauri 内置 | — | Linux 本机打包，产出 AppImage / deb |
+| 构建分发 | Tauri 内置 | — | Linux 本机打包，只产出 `.deb` |
 
 ## 桌面框架：Tauri 2.x
 
@@ -64,7 +64,7 @@
 
 ## 构建与分发：Tauri 内置
 
-- 只面向本机开发环境（Linux x86_64）：`tauri build` 产出 `.AppImage` 与 `.deb`。
+- 只面向本机开发环境（Linux x86_64）：`bundle.targets` 固定为 `["deb"]`，`tauri build` 只产出 `.deb`，不生成 AppImage。
 - 不做 macOS / Windows 打包，也不做代码签名与公证 —— 这些只在需要分发给他人时才成为问题。
 - 自动更新（`tauri-plugin-updater`）暂不启用：它需要签名密钥、更新端点与发布流水线，本机自用没有收益。方案记在 [开发计划](roadmap.md) 的 v1.1。
 

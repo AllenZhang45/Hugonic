@@ -7,7 +7,7 @@
 
 ## 范围
 
-**v1.0 必须包含**：打开 Hugo 站点、文件树、编辑器与保存、实时预览、构建、至少一个部署目标、Linux 本机安装包（AppImage / deb）。
+**v1.0 必须包含**：打开 Hugo 站点、文件树、编辑器与保存、实时预览、构建、至少一个部署目标、Linux 本机安装包（`.deb`）。
 
 **v1.0 不做**（原型里出现但先隐藏或置灰）：
 
@@ -27,7 +27,7 @@
 | M3 | 实时预览 | M2 | 保存后预览自动更新、无孤儿进程 |
 | M4 | 构建 | M3 | 真实构建、日志流式展示、可取消 |
 | M5 | 部署 | M4 | 一个平台端到端可用 |
-| M6 | 打包（Linux） | M5 | AppImage / deb 可安装运行 |
+| M6 | 打包（Linux） | M5 | `.deb` 可安装运行 |
 
 ## M0 脚手架与技术验证
 
@@ -145,21 +145,21 @@
 
 ## M6 打包（Linux 本机）
 
-交付物：可在本机安装运行的 AppImage / deb，内置 Hugo。
+交付物：可在本机安装运行的 `.deb`，内置 Hugo。
 
 任务：
 
 - [ ] Linux sidecar 二进制（`hugo-x86_64-unknown-linux-gnu`）与 `externalBin` 配置；打包脚本自动拉取并校验
 - [ ] 应用图标、bundle identifier、版本号策略
-- [ ] `tauri build` 产出 `.AppImage` 与 `.deb`；生成 AppImage 需要 FUSE，必要时安装 `libfuse2`
-- [ ] 本机安装两种包各一次，走通打开站点 / 预览 / 构建
+- [ ] `bundle.targets` 固定为 `deb`，`tauri build` 只产出 `.deb`；确认包内依赖声明正确（WebKitGTK 4.1 等）
+- [ ] 本机安装一次，走通打开站点 / 预览 / 构建
 - [ ] CI 单 Linux job 构建产物并归档
 
 验收：
 
-- AppImage 与 deb 在 Pop!_OS 24.04 上安装并启动，功能与 dev 模式一致
+- `.deb` 在 Pop!_OS 24.04 上 `sudo apt install ./hugonic_*.deb` 安装并启动，功能与 dev 模式一致
 - 安装包体积在预期范围（含 Hugo 约 20–40 MB）
-- 明确不含：代码签名、公证、自动更新（见 v1.1）
+- 明确不含：AppImage、代码签名、公证、自动更新（见 v1.1）
 
 ## 阶段依赖
 
@@ -189,7 +189,7 @@ M5 与 M6 可以在 M4 之后并行；只做本机打包，不涉及签名与公
 | Monaco 体积与 worker 配置复杂 | M0 延期 | 在脚手架上就固定 worker 方案，避免后期换打包方式 |
 | Hugo 输出格式随版本变化，摘要解析失效 | M4 展示错误 | 解析失败降级为原始日志；固定 Hugo 版本并加样本测试 |
 | 子进程残留（崩溃、强制退出） | 用户体验差 | 启动时清理上次的 PID、进程组 kill、退出钩子 |
-| AppImage 生成依赖 FUSE / linuxdeploy，部分发行版默认缺失 | M6 返工 | 同时产出 deb 兜底；在本机（Pop!_OS 24.04）先验证打包链路 |
+| deb 的依赖声明不全，换台机器装上后缺 WebKitGTK 运行库 | M6 返工 | 用 `dpkg -I` 检查 Depends；在干净环境（容器或新用户）安装验证 |
 | 部署平台 API 变更 | M5 返工 | 先做一个平台，把接口抽象成 `DeployTarget`，其余平台后续接 |
 
 ## 待决（阻塞后续阶段）
@@ -207,4 +207,5 @@ M5 与 M6 可以在 M4 之后并行；只做本机打包，不涉及签名与公
 - 浅色主题与系统主题跟随
 - 更多部署目标（Vercel、Cloudflare Pages）
 - 跨平台打包（macOS 公证、Windows 签名）与自动更新（updater + 更新端点）
+- 其他 Linux 包格式（AppImage、RPM）
 - 站点新建向导（`hugo new site`）
