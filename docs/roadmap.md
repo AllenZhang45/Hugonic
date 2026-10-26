@@ -58,12 +58,12 @@
 
 任务：
 
-- [ ] `tauri-plugin-dialog` 选择目录；`tauri-plugin-store` 记录最近项目
-- [ ] Rust `open_project`：校验 `hugo.toml` / `config.toml` / `config.yaml`，返回规范化根路径与 Hugo 版本
-- [ ] Rust `read_dir`：只读一层，返回 `{ name, kind, path }`，按忽略清单过滤
-- [ ] 路径校验：拒绝 `..` 穿越与符号链接逃逸
-- [ ] `FileTree` 组件 + `files` store：懒加载、目录优先排序、折叠、选中、双击打开
-- [ ] 空状态与“不是 Hugo 站点”的错误提示
+- [x] `tauri-plugin-dialog` 选择目录；`tauri-plugin-store` 记录最近项目
+- [x] Rust `open_project`：校验 `hugo.toml` / `config.toml` / `config.yaml`，返回规范化根路径与 Hugo 版本
+- [x] Rust `read_dir`：只读一层，返回 `{ name, kind, path }`，按忽略清单过滤
+- [x] 路径校验：拒绝 `..` 穿越与符号链接逃逸
+- [x] `FileTree` 组件 + `files` store：懒加载、目录优先排序、折叠、选中（打开文件随 M2）
+- [x] 空状态与“不是 Hugo 站点”的错误提示
 
 验收：
 

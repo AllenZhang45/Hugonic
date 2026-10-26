@@ -33,6 +33,7 @@ const paths: Record<string, string[]> = {
     "M21 3l-9 9",
     "M10 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5",
   ],
+  chevron: ["M9 6l6 6-6 6"],
   device: ["M7 2h10a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Z", "M12 18h.01"],
 };
 
