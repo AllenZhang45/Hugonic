@@ -36,7 +36,7 @@ Hugo 静态站点的桌面管理器：左侧资源管理器 + Monaco 编辑器 +
 | 文件树 | 自研（约 200 行） | Tauri `fs` 按需读目录；第三方文件树库都比手写复杂 |
 | 预览 | iframe + `hugo server` | 复用 Hugo 自带的热重建与 LiveReload，不造轮子 |
 | 样式 | UnoCSS | Tailwind 语法的按需版本，构建快、无需设计系统 |
-| 分发 | `tauri build` + updater | 一条命令产出 dmg / msi / AppImage |
+| 分发 | `tauri build` | 只做 Linux 本机打包（AppImage / deb）；跨平台与自动更新暂缓 |
 
 取舍细节见 [技术选型](docs/tech-stack.md)。
 
@@ -47,11 +47,11 @@ Hugo 静态站点的桌面管理器：左侧资源管理器 + Monaco 编辑器 +
 - 内嵌 iframe 实时预览，支持移动 / 桌面两种视图
 - 一键构建，弹窗中展示进度、页面数与构建日志
 - 部署到 Vercel / Netlify / GitHub Pages / Cloudflare Pages，或导出静态文件到本地
-- 自动更新
+- 打包为 Linux 本机安装包（AppImage / deb）
 
 ## 开发计划
 
-按 M0–M6 推进：脚手架 → 打开项目与文件树 → 编辑器与保存 → 实时预览 → 构建 → 部署 → 打包发布。
+按 M0–M6 推进：脚手架 → 打开项目与文件树 → 编辑器与保存 → 实时预览 → 构建 → 部署 → 打包（Linux）。
 每阶段的交付物、验收标准、依赖与风险见 [开发计划](docs/roadmap.md)。
 
 ## 协作约定

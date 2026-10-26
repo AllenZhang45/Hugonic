@@ -8,8 +8,7 @@
 │  ├─ 项目服务      打开 / 校验 Hugo 站点、最近项目                       │
 │  ├─ Sidecar 管理  启动 / 停止 hugo server、端口分配、退出清理            │
 │  ├─ 构建服务      执行 hugo --minify、流式转发日志                       │
-│  ├─ 文件服务      目录树读取、文件读写、notify 监听                      │
-│  └─ 更新器        tauri-plugin-updater                                │
+│  └─ 文件服务      目录树读取、文件读写、notify 监听                      │
 │           ▲ commands（invoke） / events（emit）                        │
 │ WebView 前端（Vue 3 + Pinia）                                         │
 │  ├─ 资源管理器 / Monaco 编辑器 / iframe 预览                            │
@@ -114,17 +113,17 @@
 
 ## Sidecar 打包
 
-- `tauri.conf.json` 中 `bundle.externalBin: ["binaries/hugo"]`，二进制需按 `<name>-<target-triple>` 命名（如 `hugo-x86_64-unknown-linux-gnu`）。
-- 由 `scripts/` 下的脚本在打包前下载对应平台的 Hugo 发行版、校验 SHA256、放到 `src-tauri/binaries/`；CI 缓存该目录。
+- `tauri.conf.json` 中 `bundle.externalBin: ["binaries/hugo"]`，二进制按 `<name>-<target-triple>` 命名。当前只打包 Linux：`hugo-x86_64-unknown-linux-gnu`。
+- 由 `scripts/` 下的脚本在打包前下载 Linux x86_64 版 Hugo、校验 SHA256、放到 `src-tauri/binaries/`；CI 缓存该目录。
 - 运行期用 `tauri-plugin-shell` 的 sidecar API 启动，避免误用用户 `PATH` 里的同名程序。
-- 体积：单个 Hugo 二进制约 20–30 MB（平台相关），可接受；只打包当前目标平台可进一步减小。
+- 体积：单个 Hugo 二进制约 20–30 MB，可接受。
 
 ## 安全
 
 - CSP 只允许本地资源与 `http://127.0.0.1:*` 的 frame；禁止远程脚本；`eval` 按 Monaco worker 需求单独放开。
 - fs 权限收窄到当前打开的项目根目录；路径规范化后校验前缀，拒绝 `..` 穿越与符号链接逃逸。
 - sidecar 路径由应用从资源目录解析，不接受用户可控路径。
-- 自动更新必须验签（`tauri-plugin-updater` 的 `pubkey`），更新包经 HTTPS 获取。
+- 若后续启用自动更新，必须验签（`tauri-plugin-updater` 的 `pubkey`），更新包经 HTTPS 获取。
 - 部署凭据存系统钥匙串（keyring），不落盘明文。
 
 ## 错误与日志

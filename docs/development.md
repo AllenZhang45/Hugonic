@@ -20,7 +20,7 @@ sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file \
   libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
 ```
 
-macOS 需要 Xcode Command Line Tools；Windows 需要 WebView2（Win11 自带）与 MSVC 构建工具。
+当前只面向 Linux（Pop!_OS 24.04 / Ubuntu 24.04 系）开发；macOS / Windows 的构建依赖暂时不需要。
 
 ## 常用命令（规划）
 

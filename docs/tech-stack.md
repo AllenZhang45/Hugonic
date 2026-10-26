@@ -14,7 +14,7 @@
 | 文件树 | 自研组件 | 约 200 行 | 第三方文件树库都比手写复杂 |
 | 预览 | iframe + `hugo server` | Hugo 0.139 | 热重建与刷新由 Hugo 自己完成 |
 | 样式 | UnoCSS | 最新稳定版 | Tailwind 语法的按需版本 |
-| 构建分发 | Tauri 内置 | — | 一条命令出三平台安装包 |
+| 构建分发 | Tauri 内置 | — | Linux 本机打包，产出 AppImage / deb |
 
 ## 桌面框架：Tauri 2.x
 
@@ -64,8 +64,9 @@
 
 ## 构建与分发：Tauri 内置
 
-- `tauri build` 产出 macOS `.dmg`、Windows `.msi` / NSIS、Linux `.AppImage` / `.deb`。
-- 自动更新使用 `tauri-plugin-updater`：需要签名密钥对、更新端点（静态 JSON）与 CI 发布流水线。
+- 只面向本机开发环境（Linux x86_64）：`tauri build` 产出 `.AppImage` 与 `.deb`。
+- 不做 macOS / Windows 打包，也不做代码签名与公证 —— 这些只在需要分发给他人时才成为问题。
+- 自动更新（`tauri-plugin-updater`）暂不启用：它需要签名密钥、更新端点与发布流水线，本机自用没有收益。方案记在 [开发计划](roadmap.md) 的 v1.1。
 
 ## 待决问题
 
@@ -73,5 +74,5 @@
 |---|---|
 | Hugo 版本策略 | 固定一个版本随应用发布，还是允许用户切换自定义 Hugo？前者稳定，后者灵活 |
 | 部署实现 | 调用各平台 CLI，还是走 API？CLI 依赖用户环境，API 需要凭据管理 |
-| 代码签名 | macOS 公证 + Windows 代码签名证书，直接影响分发体验 |
+| 跨平台打包 | 当前只做 Linux；macOS / Windows 需要签名与公证，留到有分发需求时 |
 | 主题市场 | 是否内置主题浏览与安装，会显著扩大范围 |

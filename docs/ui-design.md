@@ -28,7 +28,7 @@ UI 以单文件原型 [prototype-hugo-desktop-v1.html](prototype/prototype-hugo-
 
 | 原型区域 | 规划组件 | 说明 |
 |---|---|---|
-| 标题栏 | `AppTitleBar` | 窗口控制（macOS 风格红绿灯）、应用名、当前项目与 Hugo 版本、命令面板、搜索、部署菜单 |
+| 标题栏 | `AppTitleBar` | 窗口控制（原型用 macOS 风格红绿灯；Linux 下按原生装饰处理）、应用名、当前项目与 Hugo 版本、命令面板、搜索、部署菜单 |
 | 图标栏 | `ActivityBar` | 内容管理 / 仪表盘 / 媒体库 / 主题 / 分析；底部为设置与账户 |
 | 资源管理器 | `ExplorerPanel` + `FileTree` | 新建文件、文件搜索、按 Hugo 目录分组的树 |
 | 标签栏 | `EditorTabs` | 多文件标签、关闭按钮、脏标记 |
