@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hugo Desktop - 静态站点管理器</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    :root {
+      --theme-color: #6366F1;
+      --theme-light: #EEF2FF;
+      --theme-dark: #4F46E5;
+      --bg-color: #0F1117;
+      --bg-secondary: #161822;
+      --bg-tertiary: #1E2030;
+      --card-bg: #1E2030;
+      --card-bg-hover: #252840;
+      --text-primary: #E2E8F0;
+      --text-secondary: #94A3B8;
+      --text-tertiary: #64748B;
+      --border-color: #2D3148;
+      --success-color: #22C55E;
+      --warning-color: #F59E0B;
+      --error-color: #EF4444;
+      --info-color: #3B82F6;
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 12px;
+      --spacing-lg: 16px;
+      --spacing-xl: 24px;
+      --spacing-xxl: 40px;
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-full: 50%;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-primary);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    .app-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* === Title Bar === */
+    .title-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 40px;
+      padding: 0 16px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      -webkit-app-region: drag;
+      flex-shrink: 0;
+    }
+
+    .title-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .window-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .window-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .window-dot:hover { opacity: 0.8; }
+    .window-dot.red { background: #FF5F57; }
+    .window-dot.yellow { background: #FFBD2E; }
+    .window-dot.green { background: #28C840; }
+
+    .app-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .app-logo-icon {
+      width: 20px;
+      height: 20px;
+      background: var(--theme-color);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .title-bar-center {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .title-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title-btn {
+      padding: 4px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 11px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .title-btn:hover {
+      background: var(--card-bg);
+      color: var(--text-primary);
+    }
+
+    .title-btn .material-icons { font-size: 14px; }
+
+    /* === Main Layout === */
+    .main-layout {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* === Sidebar === */
+    .sidebar {
+      width: 56px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 0;
+      flex-shrink: 0;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .sidebar-item {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .sidebar-item:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+    }
+
+    .sidebar-item.active {
+      background: var(--theme-light);
+      color: var(--theme-color);
+    }
+
+    .sidebar-item.active::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      width: 3px;
+      height: 20px;
+      background: var(--theme-color);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .sidebar-item .material-icons { font-size: 22px; }
+
+    .sidebar-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .sidebar-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-full);
+      background: linear-gradient(135deg, var(--theme-color), #A78BFA);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* === Panel (Left) === */
+    .panel-left {
+      width: 260px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .panel-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .panel-action {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      transition: all 0.2s;
+    }
+
+    .panel-action:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .panel-action .material-icons { font-size: 18px; }
+
+    .panel-search {
+      padding: 12px 16px;
+    }
+
+    .search-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .search-input-wrap:focus-within {
+      border-color: var(--theme-color);
+    }
+
+    .search-input-wrap .material-icons { font-size: 16px; color: var(--text-tertiary); }
+
+    .search-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--text-primary);
+      font-size: 13px;
+      outline: none;
+    }
+
+    .search-input::placeholder { color: var(--text-tertiary); }
+
+    .file-tree {
+      flex: 1;
+      overflow-y: auto;
+      padding: 4px 8px;
+    }
+
+    .tree-section {
+      margin-bottom: 8px;
+    }
+
+    .tree-section-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+    }
+
+    .tree-section-title .material-icons { font-size: 16px; }
+
+    .tree-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 8px 5px 24px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .tree-item:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .tree-item.active {
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--theme-color);
+    }
+
+    .tree-item .material-icons { font-size: 16px; }
+    .tree-item .file-icon { color: var(--text-tertiary); }
+    .tree-item.active .file-icon { color: var(--theme-color); }
+
+    .tree-item .file-badge {
+      margin-left: auto;
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 10px;
+      background: var(--theme-light);
+      color: var(--theme-color);
+      font-weight: 500;
+    }
+
+    /* === Main Content === */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Tab Bar */
+    .tab-bar {
+      display: flex;
+      align-items: center;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      height: 36px;
+      padding: 0 8px;
+      flex-shrink: 0;
+      overflow-x: auto;
+    }
+
+    .tab-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 14px;
+      height: 36px;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .tab-item:hover { color: var(--text-secondary); }
+
+    .tab-item.active {
+      color: var(--text-primary);
+      border-bottom-color: var(--theme-color);
+    }
+
+    .tab-item .material-icons { font-size: 15px; }
+
+    .tab-close {
+      font-size: 14px !important;
+      opacity: 0.5;
+      margin-left: 4px;
+    }
+
+    .tab-close:hover { opacity: 1; }
+
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* Editor */
+    .editor-pane {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .editor-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-color);
+      flex-shrink: 0;
+    }
+
+    .toolbar-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      transition: all 0.15s;
+      border: none;
+      background: transparent;
+    }
+
+    .toolbar-btn:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .toolbar-btn .material-icons { font-size: 18px; }
+
+    .toolbar-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border-color);
+      margin: 0 4px;
+    }
+
+    .toolbar-spacer { flex: 1; }
+
+    .toolbar-label {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      padding: 4px 8px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+    }
+
+    .editor-body {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .line-numbers {
+      padding: 16px 0;
+      width: 48px;
+      background: var(--bg-color);
+      border-right: 1px solid var(--border-color);
+      text-align: right;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-tertiary);
+      user-select: none;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .line-num {
+      padding-right: 12px;
+      height: 22.1px;
+    }
+
+    .editor-code {
+      flex: 1;
+      padding: 16px;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-primary);
+      overflow-y: auto;
+      background: var(--bg-color);
+    }
+
+    .code-line {
+      height: 22.1px;
+      white-space: pre;
+    }
+
+    .code-comment { color: var(--text-tertiary); }
+    .code-key { color: #A78BFA; }
+    .code-string { color: #34D399; }
+    .code-tag { color: #F472B6; }
+    .code-value { color: #FBBF24; }
+    .code-bracket { color: var(--text-tertiary); }
+    .code-highlight { background: rgba(99, 102, 241, 0.1); display: block; margin: 0 -16px; padding: 0 16px; }
+
+    /* Preview Pane */
+    .preview-pane {
+      width: 420px;
+      border-left: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      flex-shrink: 0;
+    }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      flex-shrink: 0;
+    }
+
+    .preview-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .preview-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .preview-url {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      color: var(--text-tertiary);
+    }
+
+    .preview-url .material-icons { font-size: 13px; }
+
+    .preview-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success-color);
+    }
+
+    .preview-actions {
+      display: flex;
+      gap: 4px;
+    }
+
+    .preview-body {
+      flex: 1;
+      overflow-y: auto;
+      background: #ffffff;
+      padding: 0;
+    }
+
+    /* Preview Content - Mock Website */
+    .preview-site-header {
+      background: linear-gradient(135deg, #6366F1, #8B5CF6);
+      padding: 32px 24px;
+      color: #fff;
+    }
+
+    .preview-site-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .preview-site-logo {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .preview-site-links {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      opacity: 0.85;
+    }
+
+    .preview-site-title {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+
+    .preview-site-desc {
+      font-size: 12px;
+      opacity: 0.8;
+      line-height: 1.5;
+    }
+
+    .preview-site-content {
+      padding: 20px 24px;
+    }
+
+    .preview-card {
+      background: #F8FAFC;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid #E2E8F0;
+    }
+
+    .preview-card-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      color: #6366F1;
+      background: #EEF2FF;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+
+    .preview-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1E293B;
+      margin-bottom: 4px;
+    }
+
+    .preview-card-text {
+      font-size: 11px;
+      color: #64748B;
+      line-height: 1.5;
+    }
+
+    .preview-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 10px;
+      color: #94A3B8;
+    }
+
+    /* === Bottom Bar === */
+    .bottom-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 28px;
+      padding: 0 12px;
+      background: var(--theme-color);
+      color: #fff;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    .bottom-left, .bottom-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bottom-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      opacity: 0.9;
+      cursor: pointer;
+    }
+
+    .bottom-item:hover { opacity: 1; }
+    .bottom-item .material-icons { font-size: 14px; }
+
+    .bottom-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22C55E;
+    }
+
+    /* === Toast === */
+    .toast {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 12px 24px;
+      background: rgba(0, 0, 0, 0.85);
+      color: #fff;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .toast.show { opacity: 1; }
+
+    /* === Scrollbar === */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+    /* === Build Modal === */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    .modal {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      width: 480px;
+      padding: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-title .material-icons { color: var(--theme-color); }
+
+    .build-log {
+      background: var(--bg-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      max-height: 240px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+    }
+
+    .build-log .log-success { color: var(--success-color); }
+    .build-log .log-info { color: var(--info-color); }
+    .build-log .log-warn { color: var(--warning-color); }
+
+    .build-progress {
+      margin-bottom: 16px;
+    }
+
+    .progress-bar-bg {
+      height: 4px;
+      background: var(--bg-tertiary);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--theme-color);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-top: 6px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .modal-btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      background: transparent;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+
+    .modal-btn:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .modal-btn.primary {
+      background: var(--theme-color);
+      color: #fff;
+      border-color: var(--theme-color);
+    }
+
+    .modal-btn.primary:hover {
+      background: var(--theme-dark);
+    }
+
+    /* Deploy dropdown */
+    .deploy-dropdown {
+      position: relative;
+    }
+
+    .deploy-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 4px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 4px;
+      min-width: 180px;
+      display: none;
+      z-index: 100;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    .deploy-menu.show { display: block; }
+
+    .deploy-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .deploy-menu-item:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .deploy-menu-item .material-icons { font-size: 16px; }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Title Bar -->
+    <div class="title-bar">
+      <div class="title-bar-left">
+        <div class="window-controls">
+          <div class="window-dot red" onclick="showToast('关闭')"></div>
+          <div class="window-dot yellow" onclick="showToast('最小化')"></div>
+          <div class="window-dot green" onclick="showToast('最大化')"></div>
+        </div>
+        <div class="app-logo">
+          <div class="app-logo-icon">H</div>
+          <span>Hugo Studio</span>
+        </div>
+      </div>
+      <div class="title-bar-center">
+        <span class="material-icons" style="font-size:14px">folder</span>
+        <span>my-blog</span>
+        <span style="color:var(--text-tertiary)">—</span>
+        <span style="color:var(--text-tertiary)">Hugo v0.139.0</span>
+      </div>
+      <div class="title-bar-right">
+        <button class="title-btn" onclick="showToast('命令面板 Ctrl+Shift+P')">
+          <span class="material-icons">terminal</span>
+          命令
+        </button>
+        <button class="title-btn" onclick="showToast('快捷键 Ctrl+K')">
+          <span class="material-icons">search</span>
+          搜索
+        </button>
+        <div class="deploy-dropdown">
+          <button class="title-btn" onclick="toggleDeploy()" style="background:var(--theme-color);color:#fff;border-color:var(--theme-color)">
+            <span class="material-icons">rocket_launch</span>
+            部署
+          </button>
+          <div class="deploy-menu" id="deployMenu">
+            <div class="deploy-menu-item" onclick="showToast('部署到 Vercel...')"><span class="material-icons">cloud_upload</span> Vercel</div>
+            <div class="deploy-menu-item" onclick="showToast('部署到 Netlify...')"><span class="material-icons">cloud_upload</span> Netlify</div>
+            <div class="deploy-menu-item" onclick="showToast('部署到 GitHub Pages...')"><span class="material-icons">cloud_upload</span> GitHub Pages</div>
+            <div class="deploy-menu-item" onclick="showToast('部署到 Cloudflare Pages...')"><span class="material-icons">cloud_upload</span> Cloudflare Pages</div>
+            <div class="deploy-menu-item" onclick="showToast('导出静态文件...')"><span class="material-icons">download</span> 导出到本地</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+      <!-- Icon Sidebar -->
+      <div class="sidebar">
+        <div class="sidebar-nav">
+          <div class="sidebar-item active" onclick="switchView('content')" title="内容管理">
+            <span class="material-icons">edit_note</span>
+          </div>
+          <div class="sidebar-item" onclick="switchView('dashboard')" title="仪表盘">
+            <span class="material-icons">dashboard</span>
+          </div>
+          <div class="sidebar-item" onclick="switchView('media')" title="媒体库">
+            <span class="material-icons">perm_media</span>
+          </div>
+          <div class="sidebar-item" onclick="switchView('themes')" title="主题">
+            <span class="material-icons">palette</span>
+          </div>
+          <div class="sidebar-item" onclick="switchView('analytics')" title="分析">
+            <span class="material-icons">analytics</span>
+          </div>
+        </div>
+        <div class="sidebar-bottom">
+          <div class="sidebar-item" onclick="showToast('打开设置')" title="设置">
+            <span class="material-icons">settings</span>
+          </div>
+          <div class="sidebar-avatar" onclick="showToast('账户设置')">K</div>
+        </div>
+      </div>
+
+      <!-- Left Panel - File Tree -->
+      <div class="panel-left">
+        <div class="panel-header">
+          <span class="panel-title">资源管理器</span>
+          <div class="panel-action" onclick="showToast('新建文件')" title="新建文件">
+            <span class="material-icons">note_add</span>
+          </div>
+        </div>
+        <div class="panel-search">
+          <div class="search-input-wrap">
+            <span class="material-icons">search</span>
+            <input class="search-input" placeholder="搜索文件..." onfocus="showToast('搜索文件')">
+          </div>
+        </div>
+        <div class="file-tree">
+          <!-- Content Section -->
+          <div class="tree-section">
+            <div class="tree-section-title" onclick="toggleSection(this)">
+              <span class="material-icons">expand_more</span>
+              content
+            </div>
+            <div class="tree-item" onclick="selectFile(this, 'posts')">
+              <span class="material-icons file-icon">folder</span>
+              posts
+              <span class="file-badge">12</span>
+            </div>
+            <div class="tree-item active" onclick="selectFile(this, '_index.md')">
+              <span class="material-icons file-icon">description</span>
+              _index.md
+            </div>
+            <div class="tree-item" onclick="selectFile(this, 'getting-started.md')">
+              <span class="material-icons file-icon">description</span>
+              getting-started.md
+            </div>
+            <div class="tree-item" onclick="selectFile(this, 'hugo-tips.md')">
+              <span class="material-icons file-icon">description</span>
+              hugo-tips.md
+            </div>
+            <div class="tree-item" onclick="selectFile(this, 'deployment-guide.md')">
+              <span class="material-icons file-icon">description</span>
+              deployment-guide.md
+            </div>
+          </div>
+
+          <!-- Pages Section -->
+          <div class="tree-section">
+            <div class="tree-section-title" onclick="toggleSection(this)">
+              <span class="material-icons">expand_more</span>
+              pages
+            </div>
+            <div class="tree-item" onclick="selectFile(this, 'about.md')">
+              <span class="material-icons file-icon">description</span>
+              about.md
+            </div>
+            <div class="tree-item" onclick="selectFile(this, 'contact.md')">
+              <span class="material-icons file-icon">description</span>
+              contact.md
+            </div>
+          </div>
+
+          <!-- Config Section -->
+          <div class="tree-section">
+            <div class="tree-section-title" onclick="toggleSection(this)">
+              <span class="material-icons">expand_more</span>
+              config
+            </div>
+            <div class="tree-item" onclick="selectFile(this, 'hugo.toml')">
+              <span class="material-icons file-icon">settings</span>
+              hugo.toml
+            </div>
+            <div class="tree-item" onclick="selectFile(this, 'menus.toml')">
+              <span class="material-icons file-icon">settings</span>
+              menus.toml
+            </div>
+          </div>
+
+          <!-- Layouts Section -->
+          <div class="tree-section">
+            <div class="tree-section-title" onclick="toggleSection(this)">
+              <span class="material-icons">expand_more</span>
+              layouts
+            </div>
+            <div class="tree-item" onclick="selectFile(this, 'baseof.html')">
+              <span class="material-icons file-icon">code</span>
+              baseof.html
+            </div>
+            <div class="tree-item" onclick="selectFile(this, 'single.html')">
+              <span class="material-icons file-icon">code</span>
+              single.html
+            </div>
+            <div class="tree-item" onclick="selectFile(this, 'list.html')">
+              <span class="material-icons file-icon">code</span>
+              list.html
+            </div>
+          </div>
+
+          <!-- Static -->
+          <div class="tree-section">
+            <div class="tree-section-title" onclick="toggleSection(this)">
+              <span class="material-icons">expand_more</span>
+              static
+            </div>
+            <div class="tree-item" onclick="selectFile(this, 'images')">
+              <span class="material-icons file-icon">folder</span>
+              images
+            </div>
+            <div class="tree-item" onclick="selectFile(this, 'css')">
+              <span class="material-icons file-icon">folder</span>
+              css
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Tab Bar -->
+        <div class="tab-bar">
+          <div class="tab-item active" onclick="switchTab(this, 'index')">
+            <span class="material-icons" style="font-size:14px;color:var(--theme-color)">description</span>
+            _index.md
+            <span class="material-icons tab-close" onclick="event.stopPropagation();showToast('关闭标签')">close</span>
+          </div>
+          <div class="tab-item" onclick="switchTab(this, 'hugo.toml')">
+            <span class="material-icons" style="font-size:14px;color:#FBBF24">settings</span>
+            hugo.toml
+            <span class="material-icons tab-close" onclick="event.stopPropagation();showToast('关闭标签')">close</span>
+          </div>
+          <div class="tab-item" onclick="switchTab(this, 'single')">
+            <span class="material-icons" style="font-size:14px;color:#F472B6">code</span>
+            single.html
+            <span class="material-icons tab-close" onclick="event.stopPropagation();showToast('关闭标签')">close</span>
+          </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+          <!-- Editor -->
+          <div class="editor-pane">
+            <div class="editor-toolbar">
+              <button class="toolbar-btn" onclick="showToast('粗体 Ctrl+B')" title="粗体">
+                <span class="material-icons">format_bold</span>
+              </button>
+              <button class="toolbar-btn" onclick="showToast('斜体 Ctrl+I')" title="斜体">
+                <span class="material-icons">format_italic</span>
+              </button>
+              <button class="toolbar-btn" onclick="showToast('代码块')" title="代码块">
+                <span class="material-icons">code</span>
+              </button>
+              <div class="toolbar-divider"></div>
+              <button class="toolbar-btn" onclick="showToast('插入链接')" title="链接">
+                <span class="material-icons">link</span>
+              </button>
+              <button class="toolbar-btn" onclick="showToast('插入图片')" title="图片">
+                <span class="material-icons">image</span>
+              </button>
+              <button class="toolbar-btn" onclick="showToast('插入表格')" title="表格">
+                <span class="material-icons">table_chart</span>
+              </button>
+              <div class="toolbar-divider"></div>
+              <button class="toolbar-btn" onclick="showToast('Front Matter 编辑')" title="Front Matter">
+                <span class="material-icons">data_object</span>
+              </button>
+              <button class="toolbar-btn" onclick="openBuildModal()" title="构建站点">
+                <span class="material-icons">build</span>
+              </button>
+              <div class="toolbar-spacer"></div>
+              <span class="toolbar-label">Markdown + TOML</span>
+            </div>
+            <div class="editor-body">
+              <div class="line-numbers">
+                <div class="line-num">1</div>
+                <div class="line-num">2</div>
+                <div class="line-num">3</div>
+                <div class="line-num">4</div>
+                <div class="line-num">5</div>
+                <div class="line-num">6</div>
+                <div class="line-num">7</div>
+                <div class="line-num">8</div>
+                <div class="line-num">9</div>
+                <div class="line-num">10</div>
+                <div class="line-num">11</div>
+                <div class="line-num">12</div>
+                <div class="line-num">13</div>
+                <div class="line-num">14</div>
+                <div class="line-num">15</div>
+                <div class="line-num">16</div>
+                <div class="line-num">17</div>
+                <div class="line-num">18</div>
+                <div class="line-num">19</div>
+                <div class="line-num">20</div>
+                <div class="line-num">21</div>
+                <div class="line-num">22</div>
+              </div>
+              <div class="editor-code">
+<div class="code-line"><span class="code-comment">+++</span></div>
+<div class="code-line"><span class="code-key">title</span> = <span class="code-string">"欢迎来到我的博客"</span></div>
+<div class="code-line"><span class="code-key">description</span> = <span class="code-string">"一个关于技术与生活的个人博客"</span></div>
+<div class="code-line"><span class="code-key">date</span> = <span class="code-string">2026-10-26T10:00:00+08:00</span></div>
+<div class="code-line"><span class="code-key">draft</span> = <span class="code-value">false</span></div>
+<div class="code-line"><span class="code-key">tags</span> = <span class="code-bracket">[</span><span class="code-string">"hugo"</span>, <span class="code-string">"静态站点"</span>, <span class="code-string">"博客"</span><span class="code-bracket">]</span></div>
+<div class="code-line"><span class="code-key">categories</span> = <span class="code-bracket">[</span><span class="code-string">"技术"</span><span class="code-bracket">]</span></div>
+<div class="code-line"><span class="code-key">featured_image</span> = <span class="code-string">"/images/hero.jpg"</span></div>
+<div class="code-line code-highlight"><span class="code-key">layout</span> = <span class="code-string">"single"</span></div>
+<div class="code-line"><span class="code-comment">+++</span></div>
+<div class="code-line"></div>
+<div class="code-line"><span class="code-tag">## 为什么选择 Hugo</span></div>
+<div class="code-line"></div>
+<div class="code-line">Hugo 是世界上最快的静态站点生成器之一，</div>
+<div class="code-line">基于 Go 语言构建，能够在毫秒级别内</div>
+<div class="code-line">将 Markdown 内容转换为精美的网站。</div>
+<div class="code-line"></div>
+<div class="code-line"><span class="code-tag">### 核心优势</span></div>
+<div class="code-line"></div>
+<div class="code-line">- <span class="code-string">**极速构建**</span>：数千页面仅需几秒</div>
+<div class="code-line">- <span class="code-string">**灵活模板**</span>：强大的模板引擎</div>
+<div class="code-line">- <span class="code-string">**零依赖**</span>：单个二进制文件即可运行</div>
+<div class="code-line">- <span class="code-string">**丰富主题**</span>：数百个开源主题可选</div>
+<div class="code-line"></div>
+<div class="code-line"><span class="code-bracket">{{&lt; </span><span class="code-tag">figure</span> <span class="code-key">src</span>=<span class="code-string">"screenshot.png"</span> <span class="code-key">caption</span>=<span class="code-string">"Hugo 构建流程"</span><span class="code-bracket"> &gt;}}</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preview Pane -->
+          <div class="preview-pane">
+            <div class="preview-header">
+              <div class="preview-header-left">
+                <span class="preview-label">实时预览</span>
+                <div class="preview-url">
+                  <div class="preview-dot"></div>
+                  <span class="material-icons">lock</span>
+                  localhost:1313
+                </div>
+              </div>
+              <div class="preview-actions">
+                <div class="panel-action" onclick="showToast('刷新预览')" title="刷新">
+                  <span class="material-icons">refresh</span>
+                </div>
+                <div class="panel-action" onclick="showToast('在浏览器中打开')" title="外部打开">
+                  <span class="material-icons">open_in_new</span>
+                </div>
+                <div class="panel-action" onclick="togglePreviewDevice()" title="切换设备">
+                  <span class="material-icons" id="deviceIcon">smartphone</span>
+                </div>
+              </div>
+            </div>
+            <div class="preview-body" id="previewBody">
+              <!-- Mock Website Preview -->
+              <div class="preview-site-header">
+                <div class="preview-site-nav">
+                  <div class="preview-site-logo">✦ My Blog</div>
+                  <div class="preview-site-links">
+                    <span>首页</span>
+                    <span>文章</span>
+                    <span>关于</span>
+                  </div>
+                </div>
+                <div class="preview-site-title">欢迎来到我的博客</div>
+                <div class="preview-site-desc">一个关于技术与生活的个人博客 · 2026年10月26日</div>
+              </div>
+              <div class="preview-site-content">
+                <div class="preview-card">
+                  <div class="preview-card-tag">技术</div>
+                  <div class="preview-card-title">为什么选择 Hugo</div>
+                  <div class="preview-card-text">Hugo 是世界上最快的静态站点生成器之一，基于 Go 语言构建，能够在毫秒级别内将 Markdown 内容转换为精美的网站。</div>
+                  <div class="preview-card-meta">
+                    <span>📅 2026-10-26</span>
+                    <span>·</span>
+                    <span>⏱ 5 分钟阅读</span>
+                  </div>
+                </div>
+                <div class="preview-card">
+                  <div class="preview-card-tag" style="background:#FEF3C7;color:#D97706">教程</div>
+                  <div class="preview-card-title">核心优势</div>
+                  <div class="preview-card-text" style="line-height:1.8">
+                    ✓ 极速构建：数千页面仅需几秒<br>
+                    ✓ 灵活模板：强大的模板引擎<br>
+                    ✓ 零依赖：单个二进制文件即可运行<br>
+                    ✓ 丰富主题：数百个开源主题可选
+                  </div>
+                </div>
+                <div style="margin-top:16px;padding:12px;background:#F1F5F9;border-radius:8px;text-align:center">
+                  <span class="material-icons" style="font-size:28px;color:#94A3B8">image</span>
+                  <div style="font-size:10px;color:#94A3B8;margin-top:4px">Hugo 构建流程示意图</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="bottom-bar">
+      <div class="bottom-left">
+        <div class="bottom-item">
+          <div class="bottom-dot"></div>
+          <span>hugo server 运行中</span>
+        </div>
+        <div class="bottom-item" onclick="showToast('端口: 1313')">
+          <span class="material-icons">lan</span>
+          :1313
+        </div>
+        <div class="bottom-item" onclick="showToast('页面数: 24')">
+          <span class="material-icons">article</span>
+          24 pages
+        </div>
+        <div class="bottom-item" onclick="openBuildModal()">
+          <span class="material-icons">speed</span>
+          上次构建: 0.3s
+        </div>
+      </div>
+      <div class="bottom-right">
+        <div class="bottom-item" onclick="showToast('Git: main 分支')">
+          <span class="material-icons">fork_right</span>
+          main
+        </div>
+        <div class="bottom-item">
+          <span class="material-icons">sync</span>
+          已同步
+        </div>
+        <div class="bottom-item" onclick="showToast('UTF-8 编码')">
+          UTF-8
+        </div>
+        <div class="bottom-item">
+          Ln 8, Col 12
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Build Modal -->
+  <div class="modal-overlay" id="buildModal">
+    <div class="modal">
+      <div class="modal-title">
+        <span class="material-icons">build</span>
+        构建站点
+      </div>
+      <div class="build-progress">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+        <div class="progress-label">
+          <span id="progressText">准备构建...</span>
+          <span id="progressPercent">0%</span>
+        </div>
+      </div>
+      <div class="build-log" id="buildLog">
+        <div><span class="log-info">ℹ</span> Hugo Static Site Generator v0.139.0</div>
+        <div><span class="log-info">ℹ</span> Building sites...</div>
+        <div>  <span class="log-success">✓</span> Pages: 24</div>
+        <div>  <span class="log-success">✓</span> Paginator pages: 3</div>
+        <div>  <span class="log-success">✓</span> Static files: 47</div>
+        <div>  <span class="log-success">✓</span> Processed images: 12</div>
+        <div>  <span class="log-warn">⚠</span> 1 draft content skipped</div>
+        <div><span class="log-success">✓</span> Built in 287 ms</div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn" onclick="closeBuildModal()">关闭</button>
+        <button class="modal-btn" onclick="showToast('打开输出目录')">
+          <span class="material-icons" style="font-size:14px;vertical-align:middle">folder_open</span>
+          打开目录
+        </button>
+        <button class="modal-btn primary" onclick="runBuild()">
+          <span class="material-icons" style="font-size:14px;vertical-align:middle">replay</span>
+          重新构建
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 1800);
+    }
+
+    function toggleSection(el) {
+      const icon = el.querySelector('.material-icons');
+      const siblings = [];
+      let next = el.nextElementSibling;
+      while (next && !next.classList.contains('tree-section-title')) {
+        siblings.push(next);
+        next = next.nextElementSibling;
+      }
+      const collapsed = icon.textContent === 'chevron_right';
+      icon.textContent = collapsed ? 'expand_more' : 'chevron_right';
+      siblings.forEach(s => s.style.display = collapsed ? '' : 'none');
+    }
+
+    function selectFile(el, name) {
+      document.querySelectorAll('.tree-item').forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
+      showToast('打开: ' + name);
+    }
+
+    function switchView(view) {
+      document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      showToast('切换到: ' + view);
+    }
+
+    function switchTab(el, name) {
+      document.querySelectorAll('.tab-item').forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
+      showToast('切换到: ' + name);
+    }
+
+    function toggleDeploy() {
+      const menu = document.getElementById('deployMenu');
+      menu.classList.toggle('show');
+    }
+
+    // Close deploy menu on click outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.deploy-dropdown')) {
+        document.getElementById('deployMenu').classList.remove('show');
+      }
+    });
+
+    function openBuildModal() {
+      document.getElementById('buildModal').classList.add('show');
+      animateProgress();
+    }
+
+    function closeBuildModal() {
+      document.getElementById('buildModal').classList.remove('show');
+    }
+
+    function runBuild() {
+      const log = document.getElementById('buildLog');
+      log.innerHTML = '<div><span class="log-info">ℹ</span> Starting build...</div>';
+      animateProgress();
+      setTimeout(() => {
+        log.innerHTML = `
+          <div><span class="log-info">ℹ</span> Hugo Static Site Generator v0.139.0</div>
+          <div><span class="log-info">ℹ</span> Building sites...</div>
+          <div>  <span class="log-success">✓</span> Pages: 24</div>
+          <div>  <span class="log-success">✓</span> Paginator pages: 3</div>
+          <div>  <span class="log-success">✓</span> Static files: 47</div>
+          <div>  <span class="log-success">✓</span> Processed images: 12</div>
+          <div>  <span class="log-warn">⚠</span> 1 draft content skipped</div>
+          <div><span class="log-success">✓</span> Built in 287 ms</div>
+        `;
+      }, 1500);
+    }
+
+    function animateProgress() {
+      const bar = document.getElementById('progressBar');
+      const text = document.getElementById('progressText');
+      const percent = document.getElementById('progressPercent');
+      let p = 0;
+      bar.style.width = '0%';
+      const interval = setInterval(() => {
+        p += Math.random() * 25;
+        if (p >= 100) {
+          p = 100;
+          clearInterval(interval);
+          text.textContent = '构建完成';
+        } else {
+          text.textContent = '构建中...';
+        }
+        bar.style.width = p + '%';
+        percent.textContent = Math.round(p) + '%';
+      }, 300);
+    }
+
+    let previewMobile = true;
+    function togglePreviewDevice() {
+      previewMobile = !previewMobile;
+      const icon = document.getElementById('deviceIcon');
+      const body = document.getElementById('previewBody');
+      if (previewMobile) {
+        icon.textContent = 'smartphone';
+        body.style.maxWidth = '100%';
+        body.style.margin = '0';
+      } else {
+        icon.textContent = 'desktop_windows';
+        body.style.maxWidth = '100%';
+        body.style.margin = '0';
+      }
+      showToast(previewMobile ? '移动端预览' : '桌面端预览');
+    }
+
+    // Close modal on overlay click
+    document.getElementById('buildModal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('buildModal')) {
+        closeBuildModal();
+      }
+    });
+  </script>
+</body>
+</html>
