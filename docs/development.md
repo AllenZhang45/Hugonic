@@ -112,6 +112,7 @@ sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file \
 | 现象 | 处理 |
 |---|---|
 | `npm run tauri dev` 报 WebKitGTK 缺失 | 安装上面的 Linux 系统依赖 |
+| 启动时刷 `libEGL` / `MESA` / `DRI2` 警告（虚拟机或缺少 GPU 驱动） | WebKit 退化到软件渲染，不影响功能；可用 `WEBKIT_DISABLE_DMABUF_RENDERER=1` 或 `LIBGL_ALWAYS_SOFTWARE=1` 启动 |
 | 预览空白且 1313 被占用 | 检查端口分配逻辑，确认 sidecar 的实际端口 |
 | 打包时找不到 `hugo-<triple>` | 先运行拉取脚本，核对 target triple 命名 |
 | iframe 被 CSP 拦截 | 检查 `frame-src` 是否包含 `http://127.0.0.1:*` |
