@@ -5,9 +5,11 @@ import FileTree from "./FileTree.vue";
 import Icon from "./Icon.vue";
 import { useFilesStore } from "../stores/files";
 import { useProjectStore } from "../stores/project";
+import { usePreviewStore } from "../stores/preview";
 
 const files = useFilesStore();
 const project = useProjectStore();
+const preview = usePreviewStore();
 
 onMounted(() => {
   void project.loadRecent();
@@ -21,10 +23,13 @@ async function chooseProject() {
 }
 
 async function openPath(path: string) {
+  await preview.stop();
+
   try {
     await project.open(path);
     files.reset();
     await files.loadDir("");
+    void preview.start();
   } catch {
     // 错误已写入 project.error，这里只负责不让异常冒泡。
   }

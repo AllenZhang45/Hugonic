@@ -26,3 +26,6 @@ dist-ssr
 # Build artifacts
 coverage
 *.tsbuildinfo
+
+# 打包时由 scripts/fetch-hugo.sh 生成
+src-tauri/binaries

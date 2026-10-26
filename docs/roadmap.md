@@ -96,11 +96,11 @@
 
 任务：
 
-- [ ] `scripts/fetch-hugo.sh`：下载 Linux x86_64 版 Hugo、校验 SHA256、写入 `src-tauri/binaries/hugo-x86_64-unknown-linux-gnu`
-- [ ] Sidecar 生命周期：启动、就绪探测（匹配 `Web Server is available`）、停止、异常退出处理
-- [ ] 端口分配：1313 起递增，占用自动跳过
-- [ ] iframe 预览 + CSP `frame-src http://127.0.0.1:*`；设备切换只改容器宽度
-- [ ] 应用退出 / 切换项目时结束子进程（含子进程组，避免孤儿）
+- [x] `scripts/fetch-hugo.sh`：下载 Linux x86_64 版 Hugo、校验 SHA256、写入 `src-tauri/binaries/hugonic-hugo-x86_64-unknown-linux-gnu`
+- [x] Sidecar 生命周期：启动、就绪探测（匹配 `Web Server is available`）、停止、异常退出处理
+- [x] 端口分配：1313 起递增，占用自动跳过
+- [x] iframe 预览 + CSP `frame-src http://127.0.0.1:*`；设备切换只改容器宽度
+- [x] 应用退出 / 切换项目时结束子进程（按进程结束；hugo server 不派生子进程）
 
 验收：
 

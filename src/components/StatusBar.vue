@@ -2,9 +2,11 @@
 import { computed } from "vue";
 import { useProjectStore } from "../stores/project";
 import { useEditorStore } from "../stores/editor";
+import { usePreviewStore } from "../stores/preview";
 
 const project = useProjectStore();
 const editor = useEditorStore();
+const preview = usePreviewStore();
 
 const projectLabel = computed(() => project.info?.name ?? "未打开项目");
 const hugoLabel = computed(() => {
@@ -17,7 +19,9 @@ const hugoLabel = computed(() => {
   <footer class="statusbar">
     <div class="group">
       <span class="item"><i class="dot" :class="{ ready: project.info }" />{{ projectLabel }}</span>
-      <span class="item">hugo server 未启动</span>
+      <span class="item" :class="{ live: preview.running }">
+        {{ preview.running ? `hugo server · :${preview.port}` : "hugo server 未启动" }}
+      </span>
     </div>
     <div class="group">
       <span class="item">{{ hugoLabel }}</span>
@@ -62,5 +66,9 @@ const hugoLabel = computed(() => {
 
 .dot.ready {
   background: var(--success-color);
+}
+
+.live {
+  color: var(--success-color);
 }
 </style>

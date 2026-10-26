@@ -2,7 +2,7 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 use serde::Serialize;
-use tauri::State;
+use tauri::{AppHandle, State};
 
 use crate::state::AppState;
 
@@ -41,8 +41,16 @@ pub fn inspect_project(path: &Path) -> Result<(PathBuf, String, String), String>
 }
 
 #[tauri::command]
-pub fn open_project(path: String, state: State<AppState>) -> Result<ProjectInfo, String> {
+pub fn open_project(
+    path: String,
+    app: AppHandle,
+    state: State<AppState>,
+) -> Result<ProjectInfo, String> {
     let (root, name, config_file) = inspect_project(Path::new(&path))?;
+
+    // 切换项目时先结束旧的预览进程。
+    crate::commands::preview::stop_preview_impl(&app);
+
     let hugo_version = detect_hugo_version();
 
     let info = ProjectInfo {

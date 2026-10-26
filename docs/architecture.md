@@ -75,6 +75,7 @@
 - iframe 与宿主不同源，不能读 `contentDocument`、不能注入脚本。刷新只能依赖 Hugo 的 LiveReload，这也是选型时把预览交给 Hugo 的原因。
 - CSP 需要放行 `frame-src http://127.0.0.1:*`。
 - 设备切换只改 iframe 容器宽度（如 390px / 100%），不重新加载页面。
+- 就绪判定：匹配 `Web Server is available at`，随后统一用 `http://127.0.0.1:<port>` 作为 iframe 地址。Hugo 打印的是 `localhost`，避免 iframe 解析到 `::1` 而后端只监听 IPv4。
 
 ## 文件树
 
@@ -113,10 +114,11 @@
 
 ## Sidecar 打包
 
-- `tauri.conf.json` 中 `bundle.externalBin: ["binaries/hugo"]`，二进制按 `<name>-<target-triple>` 命名。当前只打包 Linux：`hugo-x86_64-unknown-linux-gnu`。
-- 由 `scripts/` 下的脚本在打包前下载 Linux x86_64 版 Hugo、校验 SHA256、放到 `src-tauri/binaries/`；CI 缓存该目录。
-- 运行期用 `tauri-plugin-shell` 的 sidecar API 启动，避免误用用户 `PATH` 里的同名程序。
-- 体积：单个 Hugo 二进制约 20–30 MB，可接受。
+- `tauri.conf.json` 中 `bundle.externalBin: ["binaries/hugonic-hugo"]`，二进制按 `<name>-<target-triple>` 命名。当前只打包 Linux：`hugonic-hugo-x86_64-unknown-linux-gnu`。命名为 `hugonic-hugo` 是为了避免 deb 把 `/usr/bin/hugo` 装进系统、与发行版的 hugo 包冲突。
+- 版本固定为 `0.168.0`（extended + withdeploy）。
+- `scripts/fetch-hugo.sh` 在打包前下载 Linux x86_64 版 Hugo、校验 SHA256、放到 `src-tauri/binaries/`；CI 缓存该目录。二进制不进 Git。
+- 运行期由 Rust 直接 spawn：优先取当前可执行文件同目录，开发期回退到 `src-tauri/binaries/`，不依赖用户 `PATH`。应用退出或切换项目时 kill 并 wait。
+- 体积：0.168.0 extended + withdeploy 的 Linux 二进制约 91 MB（已 strip，无法再压缩太多），deb 压缩后待 M6 实测。
 
 ## 安全
 
