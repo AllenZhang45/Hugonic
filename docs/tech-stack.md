@@ -8,6 +8,7 @@
 |---|---|---|---|
 | 桌面框架 | Tauri 2.x | 2.x | Rust 壳 + 系统 WebView，可把 Hugo 二进制作为 sidecar 打包 |
 | 前端 | Vue 3 + Composition API | 3.4+ | 工具型应用，模板语法适合多面板布局 |
+| 包管理 | npm | 随 Node 安装 | 零额外安装，单包仓库够用 |
 | 状态管理 | Pinia | 2.x | 够用且无聊 |
 | 编辑器 | Monaco Editor | 最新稳定版 | VS Code 同款，Markdown / TOML / YAML 开箱即用 |
 | 文件树 | 自研组件 | 约 200 行 | 第三方文件树库都比手写复杂 |
@@ -28,6 +29,13 @@
 - 界面本质是“图标栏 + 文件树 + 编辑器 + 预览 + 状态栏”的固定面板布局，状态集中在“当前项目 / 打开的文件 / 预览 / 构建”，Vue 的响应式与模板足够，不需要更重的架构。
 - 相对 React：本项目没有复杂的状态组合或生态依赖；单文件组件把模板、样式、逻辑放在一起，对面板型 UI 更直观；中文生态与 Hugo 中文用户群也更匹配。
 - Pinia 按领域拆 store（`project` / `files` / `editor` / `preview` / `build` / `deploy` / `ui`），避免一个巨型 store。
+
+## 包管理器：npm
+
+- 直接用 Node 自带的 npm，不额外引入 pnpm / yarn。这是单包仓库，pnpm 的核心收益（workspace 共享、严格依赖树）用不上，却要多维护一层符号链接与 hoisting 兼容问题。
+- 提交 `package-lock.json`，CI 用 `npm ci` 保证可复现安装。
+- Tauri CLI 作为 devDependency 安装（`npm i -D @tauri-apps/cli`），用 `npm run tauri` 调用，不全局安装。
+- **曾考虑 pnpm**：磁盘只剩 1.2 GB 时，硬链接存储的省空间能力是实打实的优势。空间问题解决后，少一个工具、少一类坑更重要。
 
 ## 编辑器：Monaco Editor
 

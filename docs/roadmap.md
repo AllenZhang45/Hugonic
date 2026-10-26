@@ -38,7 +38,7 @@
 - [ ] Tauri 2 初始化，窗口默认 1280×800、最小 1024×640，`capabilities` 只开必要权限
 - [ ] ESLint + Prettier + Vitest + @vue/test-utils
 - [ ] 六个空壳组件：`AppTitleBar` / `ActivityBar` / `ExplorerPanel` / `MonacoEditor` / `PreviewPane` / `StatusBar`
-- [ ] CI：`pnpm lint && pnpm test && pnpm build`（Linux）
+- [ ] CI：`npm run lint && npm test && npm run build`（Linux）
 
 技术验证 spike：
 
@@ -47,9 +47,9 @@
 
 验收：
 
-- `pnpm tauri dev` 起窗口，改前端代码 HMR 生效
+- `npm run tauri dev` 起窗口，改前端代码 HMR 生效
 - 未打开项目时显示空状态，状态栏显示“未打开项目”
-- `pnpm test` 至少有一个真实断言（不是占位）
+- `npm test` 至少有一个真实断言（不是占位）
 
 ## M1 打开项目 + 文件树
 
@@ -175,7 +175,7 @@ M5 的平台适配可以在 M4 之后与 M6 的 CI 准备并行；M6 的签名�
 每个阶段结束前，以下全部满足才算完成：
 
 - 代码与测试在同一个 commit 里；修 bug 先有失败用例
-- `pnpm lint`、`pnpm test`、`cd src-tauri && cargo test` 全绿
+- `npm run lint`、`npm test`、`cd src-tauri && cargo test` 全绿
 - 文档改动跑 `node scripts/check-docs.mjs`
 - 该阶段的手动冒烟清单逐条通过，结果写进 commit 正文
 - 相关文档（架构 / UI / 开发指南）同步更新

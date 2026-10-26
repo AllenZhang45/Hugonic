@@ -7,10 +7,10 @@
 
 | 依赖 | 版本 | 说明 |
 |---|---|---|
-| Node.js | 20 LTS+ | 前端构建 |
-| pnpm | 9+ | 包管理 |
+| Node.js | 20 LTS+ | 前端构建（自带 npm） |
+| npm | 随 Node 安装 | 包管理，仓库提交 `package-lock.json` |
 | Rust | stable | Tauri 核心 |
-| Tauri CLI | 2.x | `cargo install tauri-cli --version "^2"`，或用 pnpm 脚本 |
+| Tauri CLI | 2.x | 作为项目依赖安装：`npm i -D @tauri-apps/cli@^2` |
 | Hugo | 仅开发期 | 调试与生成 sidecar 二进制；最终由安装包内置 |
 
 Linux（Debian / Ubuntu 系）系统依赖：
@@ -26,15 +26,18 @@ macOS 需要 Xcode Command Line Tools；Windows 需要 WebView2（Win11 自带�
 
 | 命令 | 作用 |
 |---|---|
-| `pnpm install` | 安装前端依赖 |
-| `pnpm tauri dev` | 启动桌面应用（前端 HMR + Rust 热重载） |
-| `pnpm dev` | 只启动 Vite 前端（无 Tauri API，需 mock） |
-| `pnpm tauri build` | 打包当前平台安装包 |
-| `pnpm lint` | ESLint + Prettier |
-| `pnpm test` | Vitest 单测 |
+| `npm install` | 安装前端依赖 |
+| `npm ci` | CI / 干净安装（严格按 lockfile） |
+| `npm run tauri dev` | 启动桌面应用（前端 HMR + Rust 热重载） |
+| `npm run dev` | 只启动 Vite 前端（无 Tauri API，需 mock） |
+| `npm run tauri build` | 打包当前平台安装包 |
+| `npm run lint` | ESLint + Prettier |
+| `npm test` | Vitest 单测 |
 | `cd src-tauri && cargo test` | Rust 单测 |
 | `node scripts/check-docs.mjs` | 校验 Markdown 相对链接（文档改动必跑） |
 | `scripts/fetch-hugo.sh` | 下载并校验本平台的 Hugo 二进制到 `src-tauri/binaries/` |
+
+`tauri` 是 `package.json` 里的脚本，指向项目依赖的 `@tauri-apps/cli`；不需要 `cargo install tauri-cli`。
 
 ## 目录结构（规划）
 
@@ -79,7 +82,7 @@ macOS 需要 Xcode Command Line Tools；Windows 需要 WebView2（Win11 自带�
 - 交付前执行：
 
   ```bash
-  pnpm lint && pnpm test && (cd src-tauri && cargo test)
+  npm run lint && npm test && (cd src-tauri && cargo test)
   ```
 
   并在 commit 正文或 PR 中写明验证方式。
@@ -94,6 +97,7 @@ macOS 需要 Xcode Command Line Tools；Windows 需要 WebView2（Win11 自带�
   - `fix(preview): 端口占用时自动重试`
   - `test(build): 覆盖 hugo 输出解析`
 - 不提交生成物（`node_modules`、`target`、`dist`、`public`）与本地配置。
+- 包管理器统一用 npm，提交 `package-lock.json`，CI 用 `npm ci`；不混用 pnpm / yarn。
 
 ## 代码风格
 
@@ -107,7 +111,7 @@ macOS 需要 Xcode Command Line Tools；Windows 需要 WebView2（Win11 自带�
 
 | 现象 | 处理 |
 |---|---|
-| `pnpm tauri dev` 报 WebKitGTK 缺失 | 安装上面的 Linux 系统依赖 |
+| `npm run tauri dev` 报 WebKitGTK 缺失 | 安装上面的 Linux 系统依赖 |
 | 预览空白且 1313 被占用 | 检查端口分配逻辑，确认 sidecar 的实际端口 |
 | 打包时找不到 `hugo-<triple>` | 先运行拉取脚本，核对 target triple 命名 |
 | iframe 被 CSP 拦截 | 检查 `frame-src` 是否包含 `http://127.0.0.1:*` |
