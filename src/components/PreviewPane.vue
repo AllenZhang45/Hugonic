@@ -30,6 +30,17 @@ const hint = computed(() => {
   return "保存文件后 Hugo 会自动重建并刷新 iframe";
 });
 
+const frameUrl = computed(() => {
+  if (!preview.url) {
+    return "";
+  }
+  // 用查询参数触发重新导航，而不是销毁重建 iframe：
+  // 在 WebKitGTK（尤其是虚拟机软件渲染）下，重建 iframe 容易留下白屏。
+  return preview.reloadToken === 0
+    ? preview.url
+    : `${preview.url}/?hugonic_reload=${preview.reloadToken}`;
+});
+
 const deviceTitle = computed(() =>
   preview.device === "desktop" ? "切换到移动端视图" : "切换到桌面端视图",
 );
@@ -76,7 +87,7 @@ const deviceTitle = computed(() =>
         class="frame-wrap"
         :class="{ mobile: preview.device === 'mobile' }"
       >
-        <iframe :key="preview.reloadToken" :src="preview.url" class="frame" title="Hugo 站点预览" />
+        <iframe :src="frameUrl" class="frame" title="Hugo 站点预览" />
       </div>
 
       <div v-else class="empty">
