@@ -12,9 +12,11 @@
 | 状态管理 | Pinia | 2.x | 够用且无聊 |
 | 编辑器 | Monaco Editor | 最新稳定版 | VS Code 同款，Markdown / TOML / YAML 开箱即用 |
 | 文件树 | 自研组件 | 约 200 行 | 第三方文件树库都比手写复杂 |
-| 预览 | iframe + `hugo server` | Hugo 0.139 | 热重建与刷新由 Hugo 自己完成 |
+| 预览 | iframe + `hugo server` | Hugo 0.168 | 热重建与刷新由 Hugo 自己完成 |
 | 样式 | UnoCSS | 最新稳定版 | Tailwind 语法的按需版本 |
 | 构建分发 | Tauri 内置 | — | Linux 本机打包，只产出 `.deb` |
+
+版本基线：Node.js 20 LTS+、npm（随 Node）、Rust stable、Hugo **0.168.0**（extended + withdeploy）。
 
 ## 桌面框架：Tauri 2.x
 
