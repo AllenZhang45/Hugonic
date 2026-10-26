@@ -210,7 +210,7 @@ pub fn is_ready_line(line: &str) -> bool {
         || url.starts_with("http://[::1]:")
 }
 
-fn sidecar_path() -> Result<PathBuf, String> {
+pub(crate) fn sidecar_path() -> Result<PathBuf, String> {
     let file_name = if cfg!(windows) {
         format!("{SIDECAR_NAME}.exe")
     } else {

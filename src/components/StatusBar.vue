@@ -3,10 +3,12 @@ import { computed } from "vue";
 import { useProjectStore } from "../stores/project";
 import { useEditorStore } from "../stores/editor";
 import { usePreviewStore } from "../stores/preview";
+import { useBuildStore } from "../stores/build";
 
 const project = useProjectStore();
 const editor = useEditorStore();
 const preview = usePreviewStore();
+const build = useBuildStore();
 
 const projectLabel = computed(() => project.info?.name ?? "未打开项目");
 const hugoLabel = computed(() => {
@@ -24,6 +26,15 @@ const hugoLabel = computed(() => {
       </span>
     </div>
     <div class="group">
+      <button class="item item-btn" type="button" @click="build.openModal()">
+        {{
+          build.running
+            ? "构建中…"
+            : build.durationMs !== null
+              ? `上次构建 ${build.durationMs} ms`
+              : "未构建"
+        }}
+      </button>
       <span class="item">{{ hugoLabel }}</span>
       <span class="item">UTF-8</span>
       <span class="item">Ln {{ editor.cursor.line }}, Col {{ editor.cursor.column }}</span>
@@ -70,5 +81,17 @@ const hugoLabel = computed(() => {
 
 .live {
   color: var(--success-color);
+}
+
+.item-btn {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.item-btn:hover {
+  color: var(--text-secondary);
 }
 </style>

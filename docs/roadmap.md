@@ -114,11 +114,11 @@
 
 任务：
 
-- [ ] Rust `start_build` / `cancel_build`：执行 sidecar `hugo --minify`，工作目录为项目根
-- [ ] 逐行 emit 日志事件，结束时 emit 结果（退出码、耗时、摘要）
-- [ ] `BuildModal`：进度（确定或不确定）、日志滚动、复制日志、打开输出目录
-- [ ] 摘要解析（Pages / Static files / Processed images / 耗时），解析失败时降级为原始日志
-- [ ] 并发保护：同一项目同时只允许一个构建
+- [x] Rust `start_build` / `cancel_build`：执行 sidecar `hugo --minify`，工作目录为项目根
+- [x] 逐行 emit 日志事件，结束时 emit 结果（退出码、耗时、摘要）
+- [x] `BuildModal`：不确定进度条、日志自动滚动、复制日志、打开输出目录
+- [x] 摘要解析（Pages / Static files / Processed images / 耗时），解析失败时降级为原始日志
+- [x] 并发保护：`running` 标志拒绝第二个构建
 
 验收：
 

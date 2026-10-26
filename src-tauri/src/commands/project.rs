@@ -48,8 +48,9 @@ pub fn open_project(
 ) -> Result<ProjectInfo, String> {
     let (root, name, config_file) = inspect_project(Path::new(&path))?;
 
-    // 切换项目时先结束旧的预览进程。
+    // 切换项目时先结束旧的预览与构建进程。
     crate::commands::preview::stop_preview_impl(&app);
+    crate::commands::build::cancel_build_impl(&app);
 
     let hugo_version = detect_hugo_version();
 

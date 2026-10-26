@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import Icon from "./Icon.vue";
+import { useBuildStore } from "../stores/build";
+
+const build = useBuildStore();
 </script>
 
 <template>
@@ -18,6 +21,9 @@ import Icon from "./Icon.vue";
       </button>
       <button class="title-btn" disabled title="文件搜索（M2 接入）">
         <Icon name="search" class="icon" />搜索
+      </button>
+      <button class="title-btn" title="构建站点" @click="build.openModal()">
+        <Icon name="build" class="icon" />构建
       </button>
       <button class="title-btn primary" disabled title="部署（M5 接入）">
         <Icon name="upload" class="icon" />部署

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ActivityBar from "./components/ActivityBar.vue";
 import AppTitleBar from "./components/AppTitleBar.vue";
+import BuildModal from "./components/BuildModal.vue";
 import EditorPane from "./components/EditorPane.vue";
 import ExplorerPanel from "./components/ExplorerPanel.vue";
 import PreviewPane from "./components/PreviewPane.vue";
@@ -17,6 +18,7 @@ import StatusBar from "./components/StatusBar.vue";
       <PreviewPane />
     </div>
     <StatusBar />
+    <BuildModal />
   </div>
 </template>
 

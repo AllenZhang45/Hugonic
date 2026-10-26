@@ -106,12 +106,13 @@
 
 ## 构建流水线
 
-1. 前端 `invoke("start_build")`。
-2. Rust 以项目根为工作目录执行 sidecar：`hugo --minify --logLevel info`。
-3. stdout / stderr 逐行 `emit("build://log", line)`；结束时 `emit("build://done", { code, durationMs, summary })`。
-4. 前端在弹窗中渲染日志与进度。进度按阶段估算；**不要伪造随机百分比**（原型里的随机进度只是示意），拿不到确定进度就改用不确定进度条。
-5. 结果摘要从输出解析：Pages / Static files / Processed images / 耗时；解析失败时原样展示日志。
-6. 支持取消：kill 子进程并标记为已取消。
+1. 前端 `invoke("start_build")`；Rust 用 `running` 标志拒绝并发构建。
+2. 以项目根为工作目录执行 sidecar：`hugo --minify`。
+3. stdout / stderr 逐行 `emit("build://log", { line, stream })`；进程结束时 `emit("build://done", { code, durationMs, cancelled, summary })`。
+4. 前端用不确定进度条（**不伪造百分比**），日志自动滚到底；完成后展示 Pages / Static files / Processed images / 耗时。
+5. 摘要解析失败时保留原始日志，不阻断构建结果展示。
+6. 取消：向进程发 SIGTERM 并置 `cancelled`；应用退出或切换项目时也会取消。
+7. 「打开输出目录」通过 opener 打开 `<项目根>/public`。
 
 ## Sidecar 打包
 
