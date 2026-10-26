@@ -1,0 +1,27 @@
+[package]
+name = "hugonic"
+version = "0.1.0"
+description = "Hugo 静态站点的桌面管理器"
+authors = ["Allen Zhang"]
+edition = "2024"
+
+[lib]
+# `_lib` 后缀用于避免与 bin 同名冲突（参见 rust-lang/cargo#8519）。
+name = "hugonic_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# 体积优化参考：https://tauri.app/concept/size/#cargo-configuration
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true

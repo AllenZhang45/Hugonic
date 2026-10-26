@@ -35,10 +35,10 @@
 
 任务：
 
-- [ ] Vite + Vue 3 + TypeScript + UnoCSS + Pinia 初始化，`src/styles/tokens.css` 落地原型 token
-- [ ] Tauri 2 初始化，窗口默认 1280×800、最小 1024×640，`capabilities` 只开必要权限
-- [ ] ESLint + Prettier + Vitest + @vue/test-utils
-- [ ] 六个空壳组件：`AppTitleBar` / `ActivityBar` / `ExplorerPanel` / `MonacoEditor` / `PreviewPane` / `StatusBar`
+- [x] Vite + Vue 3 + TypeScript + UnoCSS + Pinia 初始化，`src/styles/tokens.css` 落地原型 token
+- [x] Tauri 2 初始化，窗口默认 1280×800、最小 1024×640，`capabilities` 只开必要权限
+- [x] ESLint + Prettier + Vitest + @vue/test-utils
+- [x] 六个空壳组件：`AppTitleBar` / `ActivityBar` / `ExplorerPanel` / `MonacoEditor` / `PreviewPane` / `StatusBar`
 - [ ] CI：`npm run lint && npm test && npm run build`（Linux）
 
 技术验证 spike：

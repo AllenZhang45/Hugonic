@@ -22,7 +22,7 @@ sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file \
 
 当前只面向 Linux（Pop!_OS 24.04 / Ubuntu 24.04 系）开发；macOS / Windows 的构建依赖暂时不需要。
 
-## 常用命令（规划）
+## 常用命令
 
 | 命令 | 作用 |
 |---|---|
@@ -39,7 +39,7 @@ sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file \
 
 `tauri` 是 `package.json` 里的脚本，指向项目依赖的 `@tauri-apps/cli`；不需要 `cargo install tauri-cli`。
 
-## 目录结构（规划）
+## 目录结构
 
 ```
 .

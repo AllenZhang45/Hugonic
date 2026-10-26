@@ -7,13 +7,24 @@ Hugo 静态站点的桌面管理器：左侧资源管理器 + Monaco 编辑器 +
 
 ## 当前状态
 
-**设计阶段。** 仓库目前只有文档与 UI 原型，还没有应用代码：
+**M0 脚手架已落地。** 应用可以构建运行，界面是静态空壳；后续阶段按 [开发计划](docs/roadmap.md) 推进。
 
 | 内容 | 位置 |
 |---|---|
 | 协作约束 | [AGENTS.md](AGENTS.md) |
 | 技术选型 / 架构 / UI / 开发指南 | [`docs/`](docs/) |
+| 前端（Vue 3 + UnoCSS + Pinia） | [`src/`](src/) |
+| Tauri 壳与配置 | [`src-tauri/`](src-tauri/) |
 | 可在浏览器打开的静态原型 | [docs/prototype/prototype-hugo-desktop-v1.html](docs/prototype/prototype-hugo-desktop-v1.html) |
+
+## 快速开始
+
+```bash
+npm install
+npm run tauri dev
+```
+
+完整的环境依赖、命令与测试说明见 [开发指南](docs/development.md)。
 
 ## 文档
 
