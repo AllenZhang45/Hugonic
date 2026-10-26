@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useProjectStore } from "../stores/project";
+import { useEditorStore } from "../stores/editor";
 
 const project = useProjectStore();
+const editor = useEditorStore();
 
 const projectLabel = computed(() => project.info?.name ?? "未打开项目");
 const hugoLabel = computed(() => {
@@ -20,7 +22,7 @@ const hugoLabel = computed(() => {
     <div class="group">
       <span class="item">{{ hugoLabel }}</span>
       <span class="item">UTF-8</span>
-      <span class="item">Ln 1, Col 1</span>
+      <span class="item">Ln {{ editor.cursor.line }}, Col {{ editor.cursor.column }}</span>
     </div>
   </footer>
 </template>

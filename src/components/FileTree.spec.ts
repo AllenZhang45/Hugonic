@@ -7,6 +7,7 @@ vi.mock("@tauri-apps/api/core", () => ({ invoke: vi.fn() }));
 import { invoke } from "@tauri-apps/api/core";
 import FileTree from "./FileTree.vue";
 import type { Entry } from "../stores/files";
+import { useEditorStore } from "../stores/editor";
 
 const mockedInvoke = vi.mocked(invoke);
 
@@ -19,6 +20,15 @@ describe("FileTree", () => {
   beforeEach(() => {
     setActivePinia(createPinia());
     mockedInvoke.mockReset();
+    mockedInvoke.mockImplementation(async (command: string) => {
+      if (command === "read_file") {
+        return { path: "hugo.toml", content: "baseURL = '/'\n", size: 13, mtimeMs: 1 };
+      }
+      if (command === "file_meta") {
+        return { size: 13, mtimeMs: 1 };
+      }
+      return [];
+    });
   });
 
   it("渲染传入的目录与文件", () => {
@@ -41,11 +51,15 @@ describe("FileTree", () => {
     expect(wrapper.text()).toContain("posts");
   });
 
-  it("点击文件后标记为选中", async () => {
+  it("点击文件后选中并在编辑器中打开", async () => {
     const wrapper = mount(FileTree, { props: { entries } });
+    const editor = useEditorStore();
 
     await wrapper.findAll("button.row")[1].trigger("click");
+    await flushPromises();
 
     expect(wrapper.findAll("button.row")[1].classes()).toContain("selected");
+    expect(mockedInvoke).toHaveBeenCalledWith("read_file", { path: "hugo.toml" });
+    expect(editor.activePath).toBe("hugo.toml");
   });
 });

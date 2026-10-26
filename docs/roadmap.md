@@ -78,11 +78,11 @@
 
 任务：
 
-- [ ] Monaco 集成，按扩展名映射语言；`Ctrl/Cmd+S` 保存
-- [ ] Rust `read_file` / `save_file`（临时文件 + rename 原子写），限制单文件大小（如 > 2 MB 只读）
-- [ ] `editor` store：多标签、激活标签、脏状态、关闭确认
-- [ ] 检测磁盘上的外部修改，提示重新加载
-- [ ] Markdown 工具栏按钮接入真实命令（粗体、斜体、代码块、链接、图片、表格）
+- [x] Monaco 集成，按扩展名映射语言；`Ctrl/Cmd+S` 保存
+- [x] Rust `read_file` / `save_file`（临时文件 + rename 原子写），超过 2 MB 或非 UTF-8 拒绝打开
+- [x] `editor` store：多标签、激活标签、脏状态、关闭确认
+- [x] 检测磁盘上的外部修改，提示重新加载
+- [x] Markdown 工具栏按钮接入真实命令（粗体、斜体、代码块、链接、图片、表格）
 
 验收：
 

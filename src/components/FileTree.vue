@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import Icon from "./Icon.vue";
 import { useFilesStore, type Entry } from "../stores/files";
+import { useEditorStore } from "../stores/editor";
 
 const props = defineProps<{
   entries: Entry[];
@@ -9,6 +10,7 @@ const props = defineProps<{
 }>();
 
 const files = useFilesStore();
+const editor = useEditorStore();
 const depth = computed(() => props.depth ?? 0);
 
 function activate(entry: Entry) {
@@ -16,6 +18,7 @@ function activate(entry: Entry) {
     void files.toggleDir(entry.path);
   } else {
     files.select(entry.path);
+    void editor.openFile(entry.path);
   }
 }
 </script>

@@ -107,6 +107,10 @@ sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file \
 - Rust：`cargo fmt` + `cargo clippy -- -D warnings`，命令层与业务层分离。
 - 新增依赖需说明理由；能用标准库或已有依赖解决时不加新包。
 
+## 已知依赖告警
+
+`monaco-editor` 依赖的 `dompurify` 在 npm audit 中有 critical 告警，上游目前没有不含告警的版本（0.56 / 0.57 都受影响）。本应用只把 Monaco 用作纯文本编辑器，不渲染不可信 HTML，因此暂时接受该告警；升级 Monaco 前重新评估。
+
 ## 排障
 
 | 现象 | 处理 |
