@@ -1,7 +1,7 @@
 mod commands;
 mod state;
 
-use state::{AppState, BuildState, PreviewState};
+use state::{AppState, BuildState, DeployState, PreviewState};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -9,6 +9,7 @@ pub fn run() {
         .manage(AppState::default())
         .manage(PreviewState::default())
         .manage(BuildState::default())
+        .manage(DeployState::default())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(tauri_plugin_opener::init())
@@ -24,6 +25,11 @@ pub fn run() {
             commands::build::start_build,
             commands::build::cancel_build,
             commands::build::open_build_output,
+            commands::deploy::netlify_credential_status,
+            commands::deploy::save_netlify_token,
+            commands::deploy::clear_netlify_token,
+            commands::deploy::test_netlify_connection,
+            commands::deploy::start_deploy,
         ])
         .build(tauri::generate_context!())
         .expect("error while building tauri application");

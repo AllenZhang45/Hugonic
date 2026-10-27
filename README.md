@@ -7,7 +7,7 @@ Hugo 静态站点的桌面管理器：左侧资源管理器 + Monaco 编辑器 +
 
 ## 当前状态
 
-**M4 已实现。** 打开站点后自动启动预览，保存即刷新；一键构建并把日志、摘要与耗时展示在弹窗里。部署按 [开发计划](docs/roadmap.md) 继续。
+**M5 已实现。** 在 M4 基础上增加 Netlify 部署：token 存系统钥匙串，带目标 baseURL 重新构建、打包上传并轮询结果；真实部署验收待完成，进度见 [开发计划](docs/roadmap.md)。
 
 | 内容 | 位置 |
 |---|---|
@@ -57,7 +57,7 @@ npm run tauri dev
 - 用 Monaco 编辑 Markdown、TOML、YAML、HTML，`Ctrl/Cmd+S` 保存
 - 内嵌 iframe 实时预览，支持移动 / 桌面两种视图
 - 一键构建，弹窗中展示进度、页面数与构建日志
-- 部署到 Vercel / Netlify / GitHub Pages / Cloudflare Pages，或导出静态文件到本地
+- 部署到 Netlify（GitHub Pages 等其余平台后续接入），或导出静态文件到本地
 - 打包为 Linux 本机安装包（`.deb`）
 
 ## 开发计划

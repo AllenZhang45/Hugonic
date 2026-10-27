@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import Icon from "./Icon.vue";
 import { useBuildStore } from "../stores/build";
+import { useDeployStore } from "../stores/deploy";
 
 const build = useBuildStore();
+const deploy = useDeployStore();
 </script>
 
 <template>
@@ -25,7 +27,7 @@ const build = useBuildStore();
       <button class="title-btn" title="构建站点" @click="build.openModal()">
         <Icon name="build" class="icon" />构建
       </button>
-      <button class="title-btn primary" disabled title="部署（M5 接入）">
+      <button class="title-btn primary" title="部署到 Netlify" @click="deploy.openModal()">
         <Icon name="upload" class="icon" />部署
       </button>
     </div>

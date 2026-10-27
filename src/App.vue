@@ -2,6 +2,7 @@
 import ActivityBar from "./components/ActivityBar.vue";
 import AppTitleBar from "./components/AppTitleBar.vue";
 import BuildModal from "./components/BuildModal.vue";
+import DeployModal from "./components/DeployModal.vue";
 import EditorPane from "./components/EditorPane.vue";
 import ExplorerPanel from "./components/ExplorerPanel.vue";
 import PreviewPane from "./components/PreviewPane.vue";
@@ -19,6 +20,7 @@ import StatusBar from "./components/StatusBar.vue";
     </div>
     <StatusBar />
     <BuildModal />
+    <DeployModal />
   </div>
 </template>
 

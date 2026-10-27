@@ -22,3 +22,9 @@ pub struct BuildState {
     pub cancelled: AtomicBool,
     pub pid: Mutex<Option<u32>>,
 }
+
+/// 正在进行的 Netlify 部署。
+#[derive(Default)]
+pub struct DeployState {
+    pub running: AtomicBool,
+}

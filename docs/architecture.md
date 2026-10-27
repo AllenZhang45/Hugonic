@@ -114,6 +114,17 @@
 6. 取消：向进程发 SIGTERM 并置 `cancelled`；应用退出或切换项目时也会取消。
 7. 「打开输出目录」通过 opener 打开 `<项目根>/public`。
 
+## 部署（Netlify）
+
+- 凭据：系统钥匙串（service `hugonic`、账号 `netlify-token`），不写项目、不进日志；提供状态查询、保存、清除与「测试连接」。
+- 站点：按站点名查询（`GET /sites?name=`），不存在则创建（`POST /sites`）；站点名在前后端都做规范化（小写、连字符、≤50）。
+- 构建：**不能复用 M4 的 `public/`** —— 部署必须用目标站点地址重新构建：
+  `hugo --minify --baseURL https://<site>.netlify.app/ --destination <临时目录>`，
+  否则站内链接与资源会指向旧的 baseURL。
+- 上传：把临时目录里的 `public/` 打成 zip，`POST /sites/{id}/deploys`；随后每 2 秒轮询 `/deploys/{id}`，直到 `ready` 或 `error`。
+- 事件：`deploy://log`、`deploy://done`（ok / url / siteName / deployId / error）。
+- 错误映射：401/403 → token 无效、404 → 资源不存在、422 → 站点名冲突、429 → 配额、其余展示 HTTP 状态与响应摘要（token 不出现在 URL 或日志里）。
+
 ## Sidecar 打包
 
 - `tauri.conf.json` 中 `bundle.externalBin: ["binaries/hugonic-hugo"]`，二进制按 `<name>-<target-triple>` 命名。当前只打包 Linux：`hugonic-hugo-x86_64-unknown-linux-gnu`。命名为 `hugonic-hugo` 是为了避免 deb 把 `/usr/bin/hugo` 装进系统、与发行版的 hugo 包冲突。
