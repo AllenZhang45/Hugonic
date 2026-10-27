@@ -24,6 +24,7 @@ pub fn run() {
             commands::files::read_file,
             commands::files::save_file,
             commands::files::file_meta,
+            commands::insights::project_insights,
             commands::preview::start_preview,
             commands::preview::stop_preview,
             commands::preview::preview_alive,
