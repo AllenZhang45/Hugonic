@@ -10,6 +10,7 @@ import EditorPane from "./components/EditorPane.vue";
 import ExplorerPanel from "./components/ExplorerPanel.vue";
 import PreviewPane from "./components/PreviewPane.vue";
 import StatusBar from "./components/StatusBar.vue";
+import ThemesView from "./components/ThemesView.vue";
 import { useUiStore } from "./stores/ui";
 
 const ui = useUiStore();
@@ -35,12 +36,7 @@ const ui = useUiStore();
         icon="media"
         description="媒体库将在 v1.1 的后续阶段接入。"
       />
-      <ComingSoonView
-        v-else-if="ui.activeView === 'themes'"
-        title="主题"
-        icon="theme"
-        description="主题浏览将在 v1.1 的后续阶段接入。"
-      />
+      <ThemesView v-else-if="ui.activeView === 'themes'" />
     </div>
     <StatusBar />
     <BuildModal />

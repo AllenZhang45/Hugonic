@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::time::UNIX_EPOCH;
 
 use serde::Serialize;
@@ -265,6 +265,17 @@ fn section_of(root: &Path, path: &Path) -> String {
         Some(component) => component.as_os_str().to_string_lossy().into_owned(),
         None => "root".to_string(),
     }
+}
+
+pub(crate) fn find_config_file(root: &Path) -> Option<PathBuf> {
+    ["hugo.toml", "config.toml", "config.yaml", "config.yml"]
+        .iter()
+        .map(|name| root.join(name))
+        .find(|path| path.is_file())
+}
+
+pub(crate) fn active_theme_name(root: &Path) -> Option<String> {
+    read_config(root).1.theme
 }
 
 fn read_config(root: &Path) -> (String, ConfigSummary) {

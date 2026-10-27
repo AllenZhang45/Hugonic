@@ -125,6 +125,14 @@
 - 事件：`deploy://log`、`deploy://done`（ok / url / siteName / deployId / error）。
 - 错误映射：401/403 → token 无效、404 → 资源不存在、422 → 站点名冲突、429 → 配额、其余展示 HTTP 状态与响应摘要（token 不出现在 URL 或日志里）。
 
+## 主题切换
+
+- 扫描 `themes/*/theme.toml`，读取名称、描述、作者、许可证、最低 Hugo 版本与截图（`images/screenshot.png` 等候选）。
+- 当前主题从 `hugo.toml` / `config.toml` / `config.yaml` 的 `theme` 字段读取。
+- 切换只对 TOML 配置写回：`toml_edit` 保留注释与其他字段，写临时文件后 `rename` 原子替换；失败时原文件不受影响。
+- YAML 配置或使用 Hugo Modules（`[module] imports`）的站点只读展示，提示手动修改。
+- 截图以 data URL 返回前端，超过 2 MB 的不加载。
+
 ## 打包（deb）
 
 - `bundle.targets = ["deb"]`，`npm run tauri build -- --bundles deb` 只产出单个 `.deb`。
