@@ -20,7 +20,9 @@ Hugo 静态站点的桌面管理器：左侧资源管理器 + Monaco 编辑器 +
 
 ```bash
 npm install
-npm run tauri dev
+npm run tauri dev     # 在桌面终端里
+# 或者在 tty / SSH 里自动探测图形环境：
+./scripts/dev.sh
 ```
 
 或安装构建好的 deb：
