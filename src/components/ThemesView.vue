@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { confirm } from "@tauri-apps/plugin-dialog";
+import CatalogPanel from "./CatalogPanel.vue";
 import Icon from "./Icon.vue";
 import { useInsightsStore } from "../stores/insights";
 import { usePreviewStore } from "../stores/preview";
@@ -13,6 +14,7 @@ const themes = useThemesStore();
 const preview = usePreviewStore();
 const insights = useInsightsStore();
 const ui = useUiStore();
+const tab = ref<"installed" | "catalog">("installed");
 
 onMounted(() => {
   void themes.load();
@@ -55,87 +57,107 @@ async function switchTheme(dir: string, name: string) {
   <section class="view" aria-label="主题">
     <div class="header">
       <h2 class="title">主题</h2>
-      <span v-if="list?.configFile" class="subtitle">配置：{{ list.configFile }}</span>
-      <button class="refresh" type="button" :disabled="themes.loading" @click="themes.load(true)">
+      <div class="tabs">
+        <button type="button" :class="{ active: tab === 'installed' }" @click="tab = 'installed'">
+          已安装
+        </button>
+        <button type="button" :class="{ active: tab === 'catalog' }" @click="tab = 'catalog'">
+          在线主题
+        </button>
+      </div>
+      <span v-if="tab === 'installed' && list?.configFile" class="subtitle"
+        >配置：{{ list.configFile }}</span
+      >
+      <button
+        v-if="tab === 'installed'"
+        class="refresh"
+        type="button"
+        :disabled="themes.loading"
+        @click="themes.load(true)"
+      >
         {{ themes.loading ? "扫描中…" : "刷新" }}
       </button>
     </div>
 
-    <div v-if="!project.info" class="empty">
-      <p>尚未打开项目</p>
-      <button type="button" @click="ui.setActiveView('content')">回到内容视图打开站点</button>
-    </div>
-
-    <p v-else-if="themes.error" class="error">{{ themes.error }}</p>
-
-    <template v-else-if="list">
-      <p v-if="!list.canSwitch" class="warning">
-        {{ list.reason ?? "当前配置不支持自动切换主题" }}
-      </p>
-
-      <div v-if="list.themes.length" class="grid">
-        <article
-          v-for="theme in list.themes"
-          :key="theme.dir"
-          class="card"
-          :class="{ active: theme.active }"
-        >
-          <div class="shot">
-            <img
-              v-if="themes.screenshots[theme.dir]"
-              :src="themes.screenshots[theme.dir]"
-              :alt="theme.name"
-            />
-            <div v-else class="shot-placeholder">
-              <Icon name="theme" class="shot-icon" />
-            </div>
-          </div>
-
-          <div class="body">
-            <div class="title-row">
-              <h3>{{ theme.name }}</h3>
-              <span v-if="theme.active" class="badge">当前</span>
-            </div>
-            <p v-if="theme.description" class="desc">{{ theme.description }}</p>
-            <dl class="meta">
-              <div v-if="theme.author">
-                <dt>作者</dt>
-                <dd>{{ theme.author }}</dd>
-              </div>
-              <div v-if="theme.license">
-                <dt>许可</dt>
-                <dd>{{ theme.license }}</dd>
-              </div>
-              <div v-if="theme.minVersion">
-                <dt>最低 Hugo</dt>
-                <dd>{{ theme.minVersion }}</dd>
-              </div>
-              <div>
-                <dt>目录</dt>
-                <dd class="mono">{{ theme.dir }}</dd>
-              </div>
-            </dl>
-          </div>
-
-          <div class="actions">
-            <button
-              type="button"
-              class="primary"
-              :disabled="theme.active || !list.canSwitch || themes.applying === theme.dir"
-              @click="switchTheme(theme.dir, theme.name)"
-            >
-              {{ theme.active ? "使用中" : themes.applying === theme.dir ? "切换中…" : "应用" }}
-            </button>
-            <button type="button" @click="themes.openFolder(theme.dir)">打开目录</button>
-          </div>
-        </article>
+    <template v-if="tab === 'installed'">
+      <div v-if="!project.info" class="empty">
+        <p>尚未打开项目</p>
+        <button type="button" @click="ui.setActiveView('content')">回到内容视图打开站点</button>
       </div>
 
-      <div v-else class="empty">
-        <p>themes/ 下还没有安装主题</p>
-        <p class="hint">把主题放到项目的 themes/&lt;name&gt;/ 目录后点击刷新。</p>
-      </div>
+      <p v-else-if="themes.error" class="error">{{ themes.error }}</p>
+
+      <template v-else-if="list">
+        <p v-if="!list.canSwitch" class="warning">
+          {{ list.reason ?? "当前配置不支持自动切换主题" }}
+        </p>
+
+        <div v-if="list.themes.length" class="grid">
+          <article
+            v-for="theme in list.themes"
+            :key="theme.dir"
+            class="card"
+            :class="{ active: theme.active }"
+          >
+            <div class="shot">
+              <img
+                v-if="themes.screenshots[theme.dir]"
+                :src="themes.screenshots[theme.dir]"
+                :alt="theme.name"
+              />
+              <div v-else class="shot-placeholder">
+                <Icon name="theme" class="shot-icon" />
+              </div>
+            </div>
+
+            <div class="body">
+              <div class="title-row">
+                <h3>{{ theme.name }}</h3>
+                <span v-if="theme.active" class="badge">当前</span>
+              </div>
+              <p v-if="theme.description" class="desc">{{ theme.description }}</p>
+              <dl class="meta">
+                <div v-if="theme.author">
+                  <dt>作者</dt>
+                  <dd>{{ theme.author }}</dd>
+                </div>
+                <div v-if="theme.license">
+                  <dt>许可</dt>
+                  <dd>{{ theme.license }}</dd>
+                </div>
+                <div v-if="theme.minVersion">
+                  <dt>最低 Hugo</dt>
+                  <dd>{{ theme.minVersion }}</dd>
+                </div>
+                <div>
+                  <dt>目录</dt>
+                  <dd class="mono">{{ theme.dir }}</dd>
+                </div>
+              </dl>
+            </div>
+
+            <div class="actions">
+              <button
+                type="button"
+                class="primary"
+                :disabled="theme.active || !list.canSwitch || themes.applying === theme.dir"
+                @click="switchTheme(theme.dir, theme.name)"
+              >
+                {{ theme.active ? "使用中" : themes.applying === theme.dir ? "切换中…" : "应用" }}
+              </button>
+              <button type="button" @click="themes.openFolder(theme.dir)">打开目录</button>
+            </div>
+          </article>
+        </div>
+
+        <div v-else class="empty">
+          <p>themes/ 下还没有安装主题</p>
+          <p class="hint">把主题放到项目的 themes/&lt;name&gt;/ 目录后点击刷新。</p>
+        </div>
+      </template>
     </template>
+
+    <CatalogPanel v-else />
   </section>
 </template>
 
@@ -159,6 +181,33 @@ async function switchTheme(dir: string, name: string) {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
+}
+
+.tabs {
+  display: flex;
+  gap: 2px;
+  margin-left: 4px;
+}
+
+.tabs button {
+  height: 24px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-tertiary);
+  font-size: 11px;
+}
+
+.tabs button:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+.tabs button.active {
+  border-color: var(--border-color);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
 }
 
 .subtitle {

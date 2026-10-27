@@ -135,6 +135,16 @@
   同名文件自动追加 `-1`、`-2`。
 - 不提供删除与重命名；打开文件交给系统默认应用。
 
+## 在线主题目录
+
+- 数据源：`https://themes.gohugo.io/`（静态 Hugo 站点）。首页一次请求可拿到约 320 张主题卡片，详情按 slug 抓取。
+- 只保留 GitHub 仓库的主题；Codeberg / GitLab 等直接跳过。
+- 抓取在独立线程中执行，通过 `theme-catalog://progress` / `theme-catalog://done` 事件回报进度；主题页之间间隔 120 ms，避免集中请求。
+- 缓存到应用缓存目录 `theme-catalog/catalog.json`：目录、详情、README 安装命令统一 7 天 TTL；手动「同步目录」会强制重新抓取。
+- 安装命令从 README 的 fenced code block / 行内命令中提取（`git submodule add`、`hugo mod get`、带 `themes/` 的 `git clone`）；找不到时按仓库地址生成 `git submodule add` 建议命令。
+- **不执行**抓到的命令，也不下载主题代码；UI 只展示、复制，并保留来源链接。
+- 截图按需下载到 `theme-catalog/screenshots/`，以 data URL 返回前端；不直接让 webview 请求远程图片。
+
 ## 主题切换
 
 - 扫描 `themes/*/theme.toml`，读取名称、描述、作者、许可证、最低 Hugo 版本与截图（`images/screenshot.png` 等候选）。

@@ -5,4 +5,5 @@ pub mod insights;
 pub mod media;
 pub mod preview;
 pub mod project;
+pub mod theme_catalog;
 pub mod themes;

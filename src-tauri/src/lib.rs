@@ -11,6 +11,7 @@ pub fn run() {
         .manage(PreviewState::default())
         .manage(BuildState::default())
         .manage(DeployState::default())
+        .manage(commands::theme_catalog::CatalogState::default())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(tauri_plugin_opener::init())
@@ -33,6 +34,11 @@ pub fn run() {
             commands::media::media_thumbnail,
             commands::media::import_media,
             commands::media::open_media,
+            commands::theme_catalog::load_theme_catalog,
+            commands::theme_catalog::theme_catalog_running,
+            commands::theme_catalog::theme_catalog_progress,
+            commands::theme_catalog::start_theme_sync,
+            commands::theme_catalog::catalog_screenshot,
             commands::preview::start_preview,
             commands::preview::stop_preview,
             commands::preview::preview_alive,
