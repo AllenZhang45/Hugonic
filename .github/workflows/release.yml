@@ -52,6 +52,7 @@ jobs:
             flag && index($0, "## [") == 1 { exit }
             flag { print }
           ' CHANGELOG.md > release-notes.md
+          sed -i '/./,$!d' release-notes.md
           if [ ! -s release-notes.md ]; then
             echo "CHANGELOG.md 中缺少 ${GITHUB_REF_NAME} 的条目"
             exit 1
