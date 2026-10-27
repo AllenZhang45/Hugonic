@@ -12,7 +12,6 @@ vi.mock("@tauri-apps/api/event", () => ({
     return () => {};
   }),
 }));
-vi.mock("@tauri-apps/plugin-opener", () => ({ openPath: vi.fn() }));
 
 import { invoke } from "@tauri-apps/api/core";
 import { useBuildStore, type BuildDone } from "./build";
@@ -74,6 +73,15 @@ describe("build store", () => {
 
     expect(build.exitCode).toBe(1);
     expect(build.summary?.pages).toBeNull();
+  });
+
+  it("打开输出目录调用后端命令", async () => {
+    mockedInvoke.mockResolvedValue(undefined);
+    const build = useBuildStore();
+
+    await build.openOutput();
+
+    expect(mockedInvoke).toHaveBeenCalledWith("open_build_output");
   });
 
   it("取消调用后端命令", async () => {

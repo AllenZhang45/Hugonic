@@ -129,6 +129,25 @@ pub fn start_build(
     Ok(())
 }
 
+/// 打开当前项目的 `public/` 目录。路径由后端从项目根拼接，前端无法指定任意路径。
+#[tauri::command]
+pub fn open_build_output(state: State<AppState>) -> Result<(), String> {
+    let root = state
+        .root
+        .lock()
+        .map_err(|_| "项目状态不可用".to_string())?
+        .clone()
+        .ok_or_else(|| "尚未打开项目".to_string())?;
+    let output = root.join("public");
+
+    if !output.is_dir() {
+        return Err("public 目录不存在，请先构建".to_string());
+    }
+
+    tauri_plugin_opener::open_path(output, None::<&str>)
+        .map_err(|error| format!("打开输出目录失败：{error}"))
+}
+
 #[tauri::command]
 pub fn cancel_build(app: AppHandle) {
     cancel_build_impl(&app);

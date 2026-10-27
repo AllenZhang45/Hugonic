@@ -2,8 +2,6 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { invoke } from "@tauri-apps/api/core";
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
-import { openPath } from "@tauri-apps/plugin-opener";
-import { useProjectStore } from "./project";
 
 export interface BuildLog {
   line: string;
@@ -116,12 +114,8 @@ export const useBuildStore = defineStore("build", () => {
   }
 
   async function openOutput() {
-    const project = useProjectStore();
-    if (!project.info) {
-      return;
-    }
     try {
-      await openPath(`${project.info.root}/public`);
+      await invoke("open_build_output");
     } catch (cause) {
       error.value = String(cause);
     }
