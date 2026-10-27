@@ -6,6 +6,7 @@ import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 export interface CatalogTheme {
   slug: string;
   name: string;
+  authors: string[];
   description: string;
   tags: string[];
   license: string | null;
@@ -17,11 +18,13 @@ export interface CatalogTheme {
   installCommands: string[];
   installExtracted: boolean;
   installSource: string | null;
+  repoUpdatedAt: string | null;
 }
 
 export interface CatalogCache {
   schema: number;
   fetchedAt: number;
+  checkedAt: number;
   complete: boolean;
   source: string;
   themes: CatalogTheme[];
@@ -51,7 +54,7 @@ export const useCatalogStore = defineStore("catalog", () => {
     if (!data.value?.complete) {
       return true;
     }
-    return Date.now() / 1000 - data.value.fetchedAt > TTL_SECONDS;
+    return Date.now() / 1000 - (data.value.checkedAt ?? data.value.fetchedAt) > TTL_SECONDS;
   });
 
   async function bindEvents() {

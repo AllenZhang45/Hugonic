@@ -88,10 +88,11 @@ const filtered = computed(() => {
 });
 
 const lastUpdated = computed(() => {
-  if (!catalog.data?.fetchedAt) {
+  const stamp = catalog.data?.checkedAt || catalog.data?.fetchedAt;
+  if (!stamp) {
     return "尚未同步";
   }
-  return new Date(catalog.data.fetchedAt * 1000).toLocaleString();
+  return new Date(stamp * 1000).toLocaleString();
 });
 
 const progressPercent = computed(() => {
@@ -157,7 +158,7 @@ async function syncNow() {
         <option value="updated">按更新时间</option>
         <option value="name">按名称</option>
       </select>
-      <span class="updated">更新于 {{ lastUpdated }}</span>
+      <span class="updated">检查于 {{ lastUpdated }}</span>
       <button class="sync" type="button" :disabled="catalog.running" @click="syncNow">
         {{ catalog.running ? "同步中…" : "同步目录" }}
       </button>
@@ -205,6 +206,7 @@ async function syncNow() {
             <span v-if="isInstalled(theme)" class="badge">已安装</span>
           </div>
           <p class="desc">{{ theme.description || "暂无描述" }}</p>
+          <p v-if="theme.authors.length" class="authors">by {{ theme.authors.join(", ") }}</p>
           <div class="tags">
             <span v-for="item in theme.tags.slice(0, 3)" :key="item" class="tag">{{ item }}</span>
           </div>
@@ -471,6 +473,15 @@ async function syncNow() {
   background: var(--theme-color);
   color: #fff;
   font-size: 10px;
+}
+
+.authors {
+  margin: 4px 0 0;
+  overflow: hidden;
+  color: var(--text-tertiary);
+  font-size: 10px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .desc {

@@ -15,6 +15,7 @@ const handlers: Record<string, (event: { payload: unknown }) => void> = {};
 const theme: CatalogTheme = {
   slug: "ananke",
   name: "Ananke",
+  authors: ["Bud Parr"],
   description: "Demo",
   tags: ["blog"],
   license: "MIT",
@@ -26,12 +27,14 @@ const theme: CatalogTheme = {
   installCommands: ["git submodule add https://github.com/gohugo-ananke/ananke themes/ananke"],
   installExtracted: false,
   installSource: null,
+  repoUpdatedAt: "2026-10-01T00:00:00Z",
 };
 
 function cache(fetchedAt: number): CatalogCache {
   return {
     schema: 1,
     fetchedAt,
+    checkedAt: fetchedAt,
     complete: true,
     source: "https://themes.gohugo.io/",
     themes: [theme],
