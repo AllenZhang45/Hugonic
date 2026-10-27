@@ -29,3 +29,20 @@ coverage
 
 # 打包时由 scripts/fetch-hugo.sh 生成
 src-tauri/binaries
+
+# 打包产物（输出目录若被改到仓库内）
+*.deb
+*.rpm
+*.AppImage
+
+# 本地环境变量
+.env
+.env.*
+!.env.example
+
+# 工具缓存
+.eslintcache
+.vite
+
+# 系统文件
+Thumbs.db
