@@ -40,6 +40,7 @@ sudo apt install ./Hugonic_*.deb
 | [UI 设计](docs/ui-design.md) | 布局、组件拆分、交互规则、设计 token |
 | [开发指南](docs/development.md) | 环境准备、常用命令、测试策略、提交规范 |
 | [开发计划](docs/roadmap.md) | M0–M6 阶段拆解、验收标准、风险与待决事项 |
+| [更新日志](CHANGELOG.md) | 各版本的变更记录 |
 | [UI 原型](docs/prototype/prototype-hugo-desktop-v1.html) | 单文件 HTML 原型，浏览器直接打开 |
 
 ## 技术栈
