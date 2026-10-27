@@ -49,3 +49,7 @@ Thumbs.db
 
 # 只给本地 agent 用，不随仓库分发
 AGENTS.md
+
+# 只做 Linux deb，图标生成器产出的移动端资源不入库
+src-tauri/icons/android
+src-tauri/icons/ios
