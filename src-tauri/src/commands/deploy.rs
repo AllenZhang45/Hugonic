@@ -352,12 +352,14 @@ fn run_deploy(app: &AppHandle, root: &Path, site_name: &str) -> Result<DeployOut
 
     let base_url = ensure_trailing_slash(&site.ssl_url);
     let output = TempOutput::new()?;
+    // `--destination` 就是输出根目录，不会自动创建 public/ 这一层。
+    let public_dir = output.0.join("public");
 
     emit_log(app, format!("构建站点（baseURL = {base_url}）…"));
-    build_for_deploy(app, root, &output.0, &base_url)?;
+    build_for_deploy(app, root, &public_dir, &base_url)?;
 
     emit_log(app, "打包 public/…");
-    let zip = zip_directory(&output.0.join("public"))?;
+    let zip = zip_directory(&public_dir)?;
     emit_log(
         app,
         format!("部署包大小：{:.1} MB", zip.len() as f64 / 1024.0 / 1024.0),
