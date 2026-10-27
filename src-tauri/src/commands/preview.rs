@@ -53,15 +53,12 @@ fn start_preview_blocking(app: AppHandle, root: PathBuf) -> Result<PreviewInfo, 
         .stdout(Stdio::piped())
         .stderr(Stdio::piped());
 
-    #[cfg(unix)]
-    {
-        use std::os::unix::process::CommandExt;
-        command.process_group(0);
-    }
+    crate::process::isolate(&mut command);
 
     let mut child = command
         .spawn()
         .map_err(|error| format!("启动 hugo server 失败：{error}"))?;
+    remember_pid(&app, child.id());
 
     let stdout = child
         .stdout
@@ -93,6 +90,7 @@ fn start_preview_blocking(app: AppHandle, root: PathBuf) -> Result<PreviewInfo, 
             }
             Err(mpsc::RecvTimeoutError::Timeout) => {
                 if let Ok(Some(status)) = child.try_wait() {
+                    forget_pid(&app);
                     return Err(format!(
                         "hugo server 提前退出（{status}）：{}",
                         tail.join(" | ")
@@ -106,6 +104,7 @@ fn start_preview_blocking(app: AppHandle, root: PathBuf) -> Result<PreviewInfo, 
     let Some(url) = url else {
         let _ = child.kill();
         let _ = child.wait();
+        forget_pid(&app);
         return Err(format!("等待 hugo server 就绪超时：{}", tail.join(" | ")));
     };
 
@@ -158,6 +157,59 @@ pub fn stop_preview_impl(app: &AppHandle) {
         let _ = child.kill();
         let _ = child.wait();
     }
+    forget_pid(app);
+}
+
+fn pid_file(app: &AppHandle) -> Option<PathBuf> {
+    app.path()
+        .app_config_dir()
+        .ok()
+        .map(|dir| dir.join("preview.pid"))
+}
+
+fn remember_pid(app: &AppHandle, pid: u32) {
+    if let Some(path) = pid_file(app) {
+        if let Some(parent) = path.parent() {
+            let _ = std::fs::create_dir_all(parent);
+        }
+        let _ = std::fs::write(path, pid.to_string());
+    }
+}
+
+fn forget_pid(app: &AppHandle) {
+    if let Some(path) = pid_file(app) {
+        let _ = std::fs::remove_file(path);
+    }
+}
+
+/// 启动时清理上一次崩溃 / 被强杀留下的预览进程。
+#[cfg(target_os = "linux")]
+pub fn cleanup_stale_preview(app: &AppHandle) {
+    let Some(path) = pid_file(app) else {
+        return;
+    };
+
+    if let Ok(text) = std::fs::read_to_string(&path)
+        && let Ok(pid) = text.trim().parse::<i32>()
+        && pid > 0
+        && is_hugo_process(pid)
+    {
+        unsafe {
+            libc::kill(pid, libc::SIGTERM);
+        }
+    }
+
+    let _ = std::fs::remove_file(path);
+}
+
+#[cfg(not(target_os = "linux"))]
+pub fn cleanup_stale_preview(_app: &AppHandle) {}
+
+#[cfg(target_os = "linux")]
+fn is_hugo_process(pid: i32) -> bool {
+    std::fs::read_to_string(format!("/proc/{pid}/comm"))
+        .map(|comm| comm.trim().starts_with("hugonic-hugo"))
+        .unwrap_or(false)
 }
 
 fn spawn_reader<R: std::io::Read + Send + 'static>(reader: R, sender: mpsc::Sender<String>) {

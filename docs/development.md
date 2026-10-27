@@ -116,6 +116,7 @@ sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file \
 |---|---|
 | `npm run tauri dev` 报 WebKitGTK 缺失 | 安装上面的 Linux 系统依赖 |
 | 预览报「找不到内置的 Hugo」 | 先运行 `scripts/fetch-hugo.sh`，确认 `src-tauri/binaries/` 下有二进制 |
+| 预览端口被残留 hugo 占用 | 应用通过 PDEATHSIG 与启动时的 `preview.pid` 自动清理；仍有残留时手动 `pkill -f hugonic-hugo` |
 | 启动即 panic：`Failed to initialize GTK` | 当前 shell 没有图形环境。设置 `XDG_RUNTIME_DIR=/run/user/1000` 与 `WAYLAND_DISPLAY=wayland-1`（或 `DISPLAY=:1`），或直接在桌面终端运行 |
 | 预览 iframe 刷新后白屏 | 虚拟机软件渲染下 WebKitGTK 的合成异常。用 `WEBKIT_DISABLE_COMPOSITING_MODE=1` 启动，或点「在浏览器中打开」确认站点本身正常 |
 | 启动时刷 `libEGL` / `MESA` / `DRI2` 警告（虚拟机或缺少 GPU 驱动） | WebKit 退化到软件渲染，不影响功能；可用 `WEBKIT_DISABLE_DMABUF_RENDERER=1` 或 `LIBGL_ALWAYS_SOFTWARE=1` 启动 |

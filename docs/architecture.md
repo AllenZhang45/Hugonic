@@ -76,6 +76,7 @@
 - 设备切换只改 iframe 容器宽度（如 390px / 100%），不重新加载页面。
 - 就绪判定：匹配 `Web Server is available at`，随后统一用 `http://127.0.0.1:<port>` 作为 iframe 地址。Hugo 打印的是 `localhost`，避免 iframe 解析到 `::1` 而后端只监听 IPv4。
 - 子进程的 stdout/stderr 必须持续读取：读端一旦关闭，hugo 下次写日志（例如保存触发的重建）会收到 EPIPE 直接退出，表现为预览白屏或 `ERR_CONNECTION_REFUSED`。前端每 2 秒调用 `preview_alive` 轮询，进程退出后把状态切到错误并提供重试。
+- 子进程用独立进程组启动，并设置 Linux 的 `PR_SET_PDEATHSIG(SIGTERM)`：应用崩溃或被强杀时内核会结束 hugo，避免残留 `hugo server` 占用端口。启动时还会读取 `preview.pid`，校验进程名后清理上一次的残留。
 
 ## 文件树
 

@@ -415,13 +415,17 @@ fn build_for_deploy(
     base_url: &str,
 ) -> Result<(), String> {
     let binary = crate::commands::preview::sidecar_path()?;
-    let output = std::process::Command::new(binary)
+    let mut command = std::process::Command::new(binary);
+    command
         .current_dir(root)
         .arg("--minify")
         .arg("--baseURL")
         .arg(base_url)
         .arg("--destination")
-        .arg(destination)
+        .arg(destination);
+    crate::process::isolate(&mut command);
+
+    let output = command
         .output()
         .map_err(|error| format!("启动 hugo 构建失败：{error}"))?;
 

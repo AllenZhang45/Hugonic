@@ -1,4 +1,5 @@
 mod commands;
+mod process;
 mod state;
 
 use state::{AppState, BuildState, DeployState, PreviewState};
@@ -13,6 +14,10 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(tauri_plugin_opener::init())
+        .setup(|app| {
+            commands::preview::cleanup_stale_preview(app.handle());
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             commands::project::open_project,
             commands::files::read_dir,

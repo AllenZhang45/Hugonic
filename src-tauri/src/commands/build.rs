@@ -64,11 +64,7 @@ pub fn start_build(
         .stdout(std::process::Stdio::piped())
         .stderr(std::process::Stdio::piped());
 
-    #[cfg(unix)]
-    {
-        use std::os::unix::process::CommandExt;
-        command.process_group(0);
-    }
+    crate::process::isolate(&mut command);
 
     let mut child = match command.spawn() {
         Ok(child) => child,
