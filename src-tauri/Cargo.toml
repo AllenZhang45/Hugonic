@@ -1,6 +1,6 @@
 [package]
 name = "hugonic"
-version = "0.1.1"
+version = "0.2.0"
 description = "Hugo 静态站点的桌面管理器"
 authors = ["Allen Zhang"]
 edition = "2024"

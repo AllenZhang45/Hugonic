@@ -2,7 +2,7 @@
 
 本项目遵循[语义化版本](https://semver.org/lang/zh-CN/)，格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)。
 
-## [未发布]
+## [0.2.0] - 2026-10-28
 
 ### 新增
 
@@ -12,8 +12,6 @@
 - 主题浏览：列出已安装主题、展示元数据与截图、切换主题（TOML 配置原子写回并保留注释；YAML / Modules 只读）
 - 媒体库：浏览 static / assets / content bundle 图片，缩略图缓存，搜索与类型筛选，导入（同名自动加后缀），复制 Markdown 引用与打开文件
 - 在线主题目录：后台抓取 themes.gohugo.io（仅 GitHub）的主题元数据、作者与 README 安装命令；首次全量，之后每 7 天增量检查版本 / 文档，只更新变化主题；本地截图缓存、搜索 / 标签 / 排序 / 详情
-
-> 媒体库与主题浏览仍为占位，随 0.2.0 后续阶段接入。
 
 ## [0.1.1] - 2026-10-28
 
@@ -47,5 +45,6 @@
 - 部署目前仅支持 Netlify
 - 已知依赖告警：`monaco-editor` 依赖的 `dompurify` 有 npm audit 告警，当前不渲染不可信 HTML，暂时接受
 
+[0.2.0]: https://github.com/AllenZhang45/Hugonic/releases/tag/v0.2.0
 [0.1.1]: https://github.com/AllenZhang45/Hugonic/releases/tag/v0.1.1
 [0.1.0]: https://github.com/AllenZhang45/Hugonic/releases/tag/v0.1.0
