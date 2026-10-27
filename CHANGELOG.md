@@ -2,11 +2,16 @@
 
 本项目遵循[语义化版本](https://semver.org/lang/zh-CN/)，格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)。
 
-## [未发布]
+## [0.1.1] - 2026-10-28
 
 ### 变更
 
 - 应用内功能图标改用 Material Symbols（UnoCSS preset-icons，mask 模式），图标映射集中在 `src/components/icons.ts`
+- 补充 Material Symbols 的 Apache-2.0 许可与第三方许可说明
+
+### 开发者
+
+- 新增 `scripts/dev.sh`：在 tty / SSH 中自动探测 Wayland / X11 后启动 `tauri dev`
 
 ## [0.1.0] - 2026-10-27
 
@@ -29,4 +34,5 @@
 - 部署目前仅支持 Netlify
 - 已知依赖告警：`monaco-editor` 依赖的 `dompurify` 有 npm audit 告警，当前不渲染不可信 HTML，暂时接受
 
+[0.1.1]: https://github.com/AllenZhang45/Hugonic/releases/tag/v0.1.1
 [0.1.0]: https://github.com/AllenZhang45/Hugonic/releases/tag/v0.1.0
