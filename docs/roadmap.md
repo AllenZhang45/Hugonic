@@ -143,23 +143,27 @@
 - 错误凭据、网络失败、目标冲突三类错误都有可读提示
 - 部署逻辑的关键分支有单测（凭据读取、结果解析），网络调用用 mock
 
+> 2026-10-27：已用 Netlify 测试站完成一次真实部署，产物可公网访问。
+
 ## M6 打包（Linux 本机）
 
 交付物：可在本机安装运行的 `.deb`，内置 Hugo。
 
 任务：
 
-- [ ] Linux sidecar 二进制（`hugo-x86_64-unknown-linux-gnu`）与 `externalBin` 配置；打包脚本自动拉取并校验
-- [ ] 应用图标、bundle identifier、版本号策略
-- [ ] `bundle.targets` 固定为 `deb`，`tauri build` 只产出 `.deb`；确认包内依赖声明正确（WebKitGTK 4.1 等）
+- [x] Linux sidecar 二进制（`hugonic-hugo-x86_64-unknown-linux-gnu`）与 `externalBin` 配置；打包脚本自动拉取并校验
+- [x] 应用图标（`app-icon.svg` → `tauri icon`）、bundle identifier、版本号策略
+- [x] `bundle.targets` 固定为 `deb`，`tauri build` 只产出 `.deb`；确认包内依赖声明正确（WebKitGTK 4.1 等）
 - [ ] 本机安装一次，走通打开站点 / 预览 / 构建
-- [ ] CI 单 Linux job 构建产物并归档
+- [x] CI 单 Linux job 构建产物并归档（仅在 `v*` tag 或手动触发）
 
 验收：
 
-- `.deb` 在 Pop!_OS 24.04 上 `sudo apt install ./hugonic_*.deb` 安装并启动，功能与 dev 模式一致
+- `.deb` 在 Pop!_OS 24.04 上 `sudo apt install ./Hugonic_*.deb` 安装并启动，功能与 dev 模式一致
 - 安装包体积在预期范围（含 Hugo 约 20–40 MB）
 - 明确不含：AppImage、代码签名、公证、自动更新（见 v1.1）
+
+> 2026-10-27：已产出 `Hugonic_0.1.0_amd64.deb`（37.28 MiB，Depends: libwebkit2gtk-4.1-0、libgtk-3-0），待安装验收。
 
 ## 阶段依赖
 

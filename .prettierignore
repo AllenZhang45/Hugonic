@@ -6,3 +6,4 @@ public
 src-tauri
 *.md
 docs/prototype
+*.svg

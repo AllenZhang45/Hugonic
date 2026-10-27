@@ -7,7 +7,7 @@ Hugo 静态站点的桌面管理器：左侧资源管理器 + Monaco 编辑器 +
 
 ## 当前状态
 
-**M5 已实现。** 在 M4 基础上增加 Netlify 部署：token 存系统钥匙串，带目标 baseURL 重新构建、打包上传并轮询结果；真实部署验收待完成，进度见 [开发计划](docs/roadmap.md)。
+**M6 已实现。** 完整链路可用：编辑、实时预览、构建、Netlify 部署，并可用 `tauri build` 产出 Linux `.deb` 安装包（内置 Hugo）。安装验收进度见 [开发计划](docs/roadmap.md)。
 
 | 内容 | 位置 |
 |---|---|
@@ -21,6 +21,12 @@ Hugo 静态站点的桌面管理器：左侧资源管理器 + Monaco 编辑器 +
 ```bash
 npm install
 npm run tauri dev
+```
+
+或安装构建好的 deb：
+
+```bash
+sudo apt install ./Hugonic_*.deb
 ```
 
 完整的环境依赖、命令与测试说明见 [开发指南](docs/development.md)。

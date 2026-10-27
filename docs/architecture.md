@@ -125,6 +125,14 @@
 - 事件：`deploy://log`、`deploy://done`（ok / url / siteName / deployId / error）。
 - 错误映射：401/403 → token 无效、404 → 资源不存在、422 → 站点名冲突、429 → 配额、其余展示 HTTP 状态与响应摘要（token 不出现在 URL 或日志里）。
 
+## 打包（deb）
+
+- `bundle.targets = ["deb"]`，`npm run tauri build -- --bundles deb` 只产出单个 `.deb`。
+- 图标由 `app-icon.svg` 经 `tauri icon` 生成到 `src-tauri/icons/`；移动端图标目录不入库。
+- `externalBin` 以 `hugonic-hugo` 打进包内，运行时从可执行文件同目录解析。
+- deb 的 `Depends` 由 Tauri 依据链接到的系统库生成；打包后需要 `dpkg-deb -I` 检查 WebKitGTK / GTK 依赖是否齐全。
+- 版本号在 `tauri.conf.json`，发版 tag 必须与之一致（CI 会校验）。
+
 ## Sidecar 打包
 
 - `tauri.conf.json` 中 `bundle.externalBin: ["binaries/hugonic-hugo"]`，二进制按 `<name>-<target-triple>` 命名。当前只打包 Linux：`hugonic-hugo-x86_64-unknown-linux-gnu`。命名为 `hugonic-hugo` 是为了避免 deb 把 `/usr/bin/hugo` 装进系统、与发行版的 hugo 包冲突。
