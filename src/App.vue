@@ -3,11 +3,11 @@ import ActivityBar from "./components/ActivityBar.vue";
 import AnalyticsView from "./components/AnalyticsView.vue";
 import AppTitleBar from "./components/AppTitleBar.vue";
 import BuildModal from "./components/BuildModal.vue";
-import ComingSoonView from "./components/ComingSoonView.vue";
 import DashboardView from "./components/DashboardView.vue";
 import DeployModal from "./components/DeployModal.vue";
 import EditorPane from "./components/EditorPane.vue";
 import ExplorerPanel from "./components/ExplorerPanel.vue";
+import MediaView from "./components/MediaView.vue";
 import PreviewPane from "./components/PreviewPane.vue";
 import StatusBar from "./components/StatusBar.vue";
 import ThemesView from "./components/ThemesView.vue";
@@ -30,12 +30,7 @@ const ui = useUiStore();
 
       <DashboardView v-if="ui.activeView === 'dashboard'" />
       <AnalyticsView v-else-if="ui.activeView === 'analytics'" />
-      <ComingSoonView
-        v-else-if="ui.activeView === 'media'"
-        title="媒体库"
-        icon="media"
-        description="媒体库将在 v1.1 的后续阶段接入。"
-      />
+      <MediaView v-else-if="ui.activeView === 'media'" />
       <ThemesView v-else-if="ui.activeView === 'themes'" />
     </div>
     <StatusBar />

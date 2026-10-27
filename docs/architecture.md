@@ -125,6 +125,16 @@
 - 事件：`deploy://log`、`deploy://done`（ok / url / siteName / deployId / error）。
 - 错误映射：401/403 → token 无效、404 → 资源不存在、422 → 站点名冲突、429 → 配额、其余展示 HTTP 状态与响应摘要（token 不出现在 URL 或日志里）。
 
+## 媒体库
+
+- 扫描 `static/`、`assets/` 与 `content/` 下的图片，按修改时间倒序，最多 1000 个。
+- 缩略图由 Rust 生成：最长边 360 px、JPEG 质量 75，缓存到应用缓存目录
+  `media-thumbs/`，key 由相对路径 + mtime + 大小哈希得到；SVG 在 256 KB 内直接返回原文件。
+- 前端通过 data URL 显示缩略图，不需要 asset 协议，CSP 继续只放行 `data:`。
+- 导入校验扩展名、20 MB 上限与目标目录（只允许 `static/`、`assets/` 子目录），
+  同名文件自动追加 `-1`、`-2`。
+- 不提供删除与重命名；打开文件交给系统默认应用。
+
 ## 主题切换
 
 - 扫描 `themes/*/theme.toml`，读取名称、描述、作者、许可证、最低 Hugo 版本与截图（`images/screenshot.png` 等候选）。
