@@ -51,6 +51,15 @@ UI 以单文件原型 [prototype-hugo-desktop-v1.html](prototype/prototype-hugo-
 - **空状态**：未打开项目时工作区显示“打开 Hugo 站点”，隐藏文件树与预览。
 - **反馈**：所有操作以 Toast 或状态栏变化回应，避免静默失败。
 
+## 图标
+
+功能图标使用 **Material Symbols**，由 UnoCSS 的 `preset-icons` 在构建期内联为 CSS mask。
+
+- 组件只接收语义名：`<Icon name="folder" />`
+- 语义名 → 图标类名的映射集中在 `src/components/icons.ts`（如 `folder → i-material-symbols:folder`）
+- 动态类名无法被 UnoCSS 扫描，因此这些类名会通过 `safelist` 显式注册
+- 颜色继承 `currentColor`，尺寸由使用处的 `width/height` 决定
+
 ## 设计 token
 
 来自原型 `:root`，实现时集中放在 `src/styles/tokens.css`，UnoCSS 通过别名引用。

@@ -11,6 +11,7 @@
 | 包管理 | npm | 随 Node 安装 | 零额外安装，单包仓库够用 |
 | 状态管理 | Pinia | 2.x | 够用且无聊 |
 | 编辑器 | Monaco Editor | 最新稳定版 | VS Code 同款，Markdown / TOML / YAML 开箱即用 |
+| 图标 | Material Symbols（UnoCSS preset-icons） | 最新集合 | 与原型 Material 风格一致，构建期内联为 CSS mask |
 | 文件树 | 自研组件 | 约 200 行 | 第三方文件树库都比手写复杂 |
 | 预览 | iframe + `hugo server` | Hugo 0.168 | 热重建与刷新由 Hugo 自己完成 |
 | 样式 | UnoCSS | 最新稳定版 | Tailwind 语法的按需版本 |

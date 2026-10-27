@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import Icon from "./Icon.vue";
 import { useUiStore, type ViewId } from "../stores/ui";
+import type { IconName } from "./icons";
 
 const ui = useUiStore();
 
-const items: { id: ViewId; icon: string; label: string }[] = [
+const items: { id: ViewId; icon: IconName; label: string }[] = [
   { id: "content", icon: "edit", label: "内容管理" },
   { id: "dashboard", icon: "dashboard", label: "仪表盘" },
   { id: "media", icon: "media", label: "媒体库" },

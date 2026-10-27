@@ -103,6 +103,7 @@ sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file \
 - TypeScript 严格模式；Vue 统一 `<script setup lang="ts">`，组件文件名 PascalCase。
 - 状态只在 Pinia store 中变更，组件通过 action 调用。
 - 样式只走 UnoCSS utility，颜色等设计 token 从 CSS 变量取；不写全局选择器。
+- 功能图标使用 Material Symbols（UnoCSS preset-icons）；新增图标只改 `src/components/icons.ts`，类名会自动进入 safelist。
 - Rust：`cargo fmt` + `cargo clippy -- -D warnings`，命令层与业务层分离。
 - 新增依赖需说明理由；能用标准库或已有依赖解决时不加新包。
 

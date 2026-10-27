@@ -2,6 +2,12 @@
 
 本项目遵循[语义化版本](https://semver.org/lang/zh-CN/)，格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)。
 
+## [未发布]
+
+### 变更
+
+- 应用内功能图标改用 Material Symbols（UnoCSS preset-icons，mask 模式），图标映射集中在 `src/components/icons.ts`
+
 ## [0.1.0] - 2026-10-27
 
 首个可用版本：面向 Linux 的 Hugo 桌面客户端。

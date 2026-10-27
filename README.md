@@ -41,6 +41,7 @@ sudo apt install ./Hugonic_*.deb
 | [开发指南](docs/development.md) | 环境准备、常用命令、测试策略、提交规范 |
 | [开发计划](docs/roadmap.md) | M0–M6 阶段拆解、验收标准、风险与待决事项 |
 | [更新日志](CHANGELOG.md) | 各版本的变更记录 |
+| [第三方许可](THIRD_PARTY_LICENSES.md) | Material Symbols 等第三方资源许可 |
 | [UI 原型](docs/prototype/prototype-hugo-desktop-v1.html) | 单文件 HTML 原型，浏览器直接打开 |
 
 ## 技术栈
