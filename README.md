@@ -11,7 +11,6 @@ Hugo 静态站点的桌面管理器：左侧资源管理器 + Monaco 编辑器 +
 
 | 内容 | 位置 |
 |---|---|
-| 协作约束 | [AGENTS.md](AGENTS.md) |
 | 技术选型 / 架构 / UI / 开发指南 | [`docs/`](docs/) |
 | 前端（Vue 3 + UnoCSS + Pinia） | [`src/`](src/) |
 | Tauri 壳与配置 | [`src-tauri/`](src-tauri/) |
@@ -67,4 +66,4 @@ npm run tauri dev
 
 ## 协作约定
 
-见 [AGENTS.md](AGENTS.md)：每次改动完成后必须创建一个对应的 commit；每次改动必须附带测试，交付前所有测试与验证通过。
+每次改动完成后创建一个对应的 commit；每次改动附带测试，交付前所有测试与验证通过。详见 [开发指南](docs/development.md)。

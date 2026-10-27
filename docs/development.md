@@ -43,7 +43,6 @@ sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file \
 
 ```
 .
-├─ AGENTS.md               协作约束
 ├─ README.md
 ├─ docs/                   设计文档
 ├─ src/                    Vue 前端
@@ -65,7 +64,7 @@ sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file \
 
 ## 测试策略
 
-依据 [AGENTS.md](../AGENTS.md)：**每次改动都必须编写或更新测试**，交付前所有测试与验证必须通过。
+**每次改动都必须编写或更新测试**，交付前所有测试与验证必须通过。
 
 | 层 | 工具 | 覆盖内容 |
 |---|---|---|

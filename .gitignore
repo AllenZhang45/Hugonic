@@ -46,3 +46,6 @@ src-tauri/binaries
 
 # 系统文件
 Thumbs.db
+
+# 只给本地 agent 用，不随仓库分发
+AGENTS.md

@@ -24,7 +24,6 @@
 
 ```
 .
-├─ AGENTS.md               协作约束
 ├─ README.md
 ├─ docs/                   设计文档
 ├─ src/                    Vue 前端
