@@ -119,7 +119,7 @@ npm run tauri build -- --bundles deb    # 产物：src-tauri/target/release/bund
 sudo apt install ./src-tauri/target/release/bundle/deb/Hugonic_*.deb
 ```
 
-发版流程：把 `src-tauri/tauri.conf.json` 的 `version` 与 tag 对齐（如 `0.1.0` → `v0.1.0`），push tag 后触发 `.github/workflows/release.yml`：跑 lint/test、拉取 sidecar、release 测试、构建 deb，并把产物附加到 GitHub Release。**普通 push 与 PR 不触发 CI。**
+发版流程：把 `package.json`、`src-tauri/tauri.conf.json`、`src-tauri/Cargo.toml` 的 `version` 与 tag 对齐（如 `0.1.1` → `v0.1.1`），并在 `CHANGELOG.md` 写好同版本条目；push tag 后触发 `.github/workflows/release.yml`：跑 lint/test、拉取 sidecar、release 测试、构建 deb，并把产物附加到 GitHub Release。**普通 push 与 PR 不触发 CI。**
 
 ## 排障
 
